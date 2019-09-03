@@ -1,0 +1,187 @@
+{% load i18n humanize staticfiles admin_list %}
+<style>
+    #admin-tools-actions{
+        display: none;
+    }
+    .list-group:hover .list-group-item:hover {
+        background: #fff;
+    }
+</style>
+{% include 'core/snippets/spinner.html' %}
+<div class="col-md-9 col-md-offset-1">
+    <ul class="object-list list-group">
+        {% if backup_id %}
+            {% with backup_list as object_list %}
+                {% for obj in objects_page.object_list %}
+                    <li class="ik-li list-group-item {{ obj.status }}" id="{{ obj.id }}" data-id="{{ obj.id }}" style="border: none;">
+                        <div class="event">
+                            <div class="subtle-shade event-detail">
+                                <div class="event-icon pull-left">
+                                    <img src="{% static 'dbbackup/img/isometric-cloud-computing-concept-represented-by-a-server-with-a-vector-id969567772.jpg' %}" />
+                                </div>
+                                <div class="event-content">
+                                    <div>
+                                        <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'Hostname' %}</b>
+                                        <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0;">{{ obj.job_config.hostname }}</div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div>
+                                        <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'Database type' %}</b>
+                                        <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0;">{{ obj.job_config.db_type }}</div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div>
+                                        <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'Database name' %}</b>
+                                        <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0;">{{ obj.job_config.db_name }}</div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div>
+                                        <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'Run every' %}</b>
+                                        <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0;">{{ obj.job_config.run_every }} hours</div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div>
+                                        <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'Status' %}</b>
+                                        <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0; color: #cd8f17; font-weight: bolder">{{ obj.status}}</div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div>
+                                        <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'Start time' %}</b>
+                                        <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0; color: mediumblue; font-weight: bolder">{{ obj.start_time }}</div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div>
+                                        <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'File log name' %}</b>
+                                        <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0; color: #556322; font-weight: bolder">{{ obj.file_log_name }}</div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div>
+                                        <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'Size' %}</b>
+                                        <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0; color: #cd086a; font-weight: bolder">{{ obj.file_log_size }}</div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    {% for destination_server in obj.job_config.destination_server_list %}
+                                        <div>
+                                            <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'Destination server' %}{{ forloop.counter }}</b>
+                                            <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0;">{{ destination_server }}</div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="actions">
+                            {% if has_is_active_field %}
+                                {% if obj.is_active %}
+                                    <i class="action glyphicon glyphicon-ok toggle active off" title="{% trans "Deactivate" %}"></i>
+                                {% else %}
+                                    <i class="action glyphicon glyphicon-ok toggle active on" title="{% trans "Activate" %}"></i>
+                                {% endif %}
+                            {% endif %}
+                            <i class="glyphicon glyphicon-trash trash" title="{% trans "Delete item" %}"></i>
+                        </div>
+                    </li>
+                {% endfor %}
+            {% endwith %}
+        {% else%}
+{#        {% with backup_list as object_list %} #}
+{#            {% for obj in object_list %}#}
+           {% for obj in objects_page.object_list %}
+                <li class="ik-li list-group-item {{ obj.status }}" id="{{ obj.id }}" data-id="{{ obj.id }}" style="border: none;">
+                    <div class="event">
+                        <div class="subtle-shade event-detail">
+                            <div class="event-icon pull-left">
+                                <img src="{% static 'dbbackup/img/isometric-cloud-computing-concept-represented-by-a-server-with-a-vector-id969567772.jpg' %}" />
+                            </div>
+                            <div class="event-content">
+                                <div>
+                                    <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'Hostname' %}</b>
+                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0;">{{ obj.job_config.hostname }}</div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div>
+                                    <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'Database type' %}</b>
+                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0;">{{ obj.job_config.db_type }}</div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div>
+                                    <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'Database name' %}</b>
+                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0;">{{ obj.job_config.db_name }}</div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div>
+                                    <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'Run every' %}</b>
+                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0;">{{ obj.job_config.run_every }} hours</div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div>
+                                    <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'Status' %}</b>
+                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0; color: #cd8f17; font-weight: bolder">{{ obj.status}}</div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div>
+                                    <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'Start time' %}</b>
+                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0; color: mediumblue; font-weight: bolder">{{ obj.start_time }}</div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div>
+                                    <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'File log name' %}</b>
+                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0; color: #556322; font-weight: bolder">{{ obj.file_log_name }}</div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div>
+                                    <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'Size' %}</b>
+                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0; color: #cd086a; font-weight: bolder">{{ obj.file_log_size }}</div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                {% for destination_server in obj.job_config.destination_server_list %}
+                                    <div>
+                                        <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'Destination server' %}{{ forloop.counter }}</b>
+                                        <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0;">{{ destination_server }}</div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="actions">
+                        {% if has_is_active_field %}
+                            {% if obj.is_active %}
+                                <i class="action glyphicon glyphicon-ok toggle active off" title="{% trans "Deactivate" %}"></i>
+                            {% else %}
+                                <i class="action glyphicon glyphicon-ok toggle active on" title="{% trans "Activate" %}"></i>
+                            {% endif %}
+                        {% endif %}
+                        <i class="glyphicon glyphicon-trash trash" title="{% trans "Delete item" %}"></i>
+                    </div>
+                </li>
+           {% endfor %}
+        {% endif %}
+    </ul>
+    {% if objects_page.paginator.num_pages > 1 %}
+    <ul class="pagination container-fluid">
+        <li class="disabled" data-val="first"><a href="javascript:;" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
+        {% for page in page_range %}
+            <li class="page{% if page == objects_page.number %} active{% endif %}" data-val="{{ page }}">
+                <a href="javascript:;">
+                    {{ page }} {% if page == objects_page.number %}<span class="sr-only">(current)</span>{% endif %}
+                </a>
+            </li>
+        {% endfor %}
+        <li data-val="-1"><a href="javascript:;" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+    </ul>
+    {% endif %}
+    <div id="page-navigation" class="text-muted container-fluid">
+        {% if objects_page.paginator.num_pages > 1 %}
+            <p>{% blocktrans with count=objects_page.paginator.count start=objects_page.start_index end=objects_page.end_index %}
+                {{ start }} – {{ end }} of {{ count }} results{% endblocktrans %}</p>
+        {% else %}
+            <p>{% blocktrans with count=objects_page.paginator.count %}{{ count }} results{% endblocktrans %}</p>
+        {% endif %}
+    </div>
+</div>
+

@@ -1,0 +1,11 @@
+This following tools are required to run this application on the server which executes it.
+
+1. Openssh-client and openssh-server
+2.
+3. Add the following command in the crontab file: * /1 * * * python cron.py
+
+
+
+Tips:
+1. Install openssh-client and openssh-server
+2. Start ssh service thru command '$sudo service ssh start'

@@ -1,0 +1,76 @@
+
+
+
+
+
+
+
+
+
+
+
+/*footer css*/
+    /*Begin*/
+#company-info{
+    margin-top: 4vh;
+    text-align: center;
+}
+
+#company-info-name {
+    color: #ffffff;
+    text-align: center;
+}
+
+
+#company-name {
+    color: #666;
+    text-decoration: none
+}
+
+.footer {
+    background-color: #233682;
+    flex-shrink: 0;  /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+    padding: 3vh 0;
+    margin:0px;
+}
+
+.copy-right-name{
+    color: #ffffff;
+}
+
+.footer-links{
+    color: #d2d1d1;
+}
+
+.h5-footer-core{
+    color: #ffffff;
+    font-weight: bold;
+    margin-top: 2vh;
+}
+
+.unordered-footer-lists {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#last-div-footer {
+    padding: 3px 0;
+    text-align: center;
+}
+
+.last-footer-tag{
+    color: #ffffff;
+}
+
+.logo {
+    display: block;
+    text-align: center;
+}
+
+.footer-copyright {
+    color: #ffffff;
+    padding: 3px 0;
+    text-align: center;
+}
+
+    /* End */
