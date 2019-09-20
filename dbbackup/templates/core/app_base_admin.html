@@ -1,0 +1,22 @@
+{% extends 'core/base_admin.html' %}
+
+{% load i18n static humanize user_agents auth_tokens media_from_provider cache %}
+
+{% block app_admin_nav %}
+    <div class="divider"></div>
+    <ul class="nav nav-pills nav-stacked">
+        <li role="presentation" class="homepage">
+            {% url 'dbbackup:jobconfig_list' as job_config_list_url %}
+            <a href="{{ job_config_list_url }}">{% trans "Job configs" %}</a>
+        </li>
+        <li role="presentation" class="menus">
+            <a href="{% url 'dbbackup:backup_list' %}">
+                {% trans "Backups" %}
+            </a>
+        </li>
+    </ul>
+{% endblock %}
+
+
+{% block basic_nav %}{% endblock %}
+{% block sudo_nav %}{% endblock %}

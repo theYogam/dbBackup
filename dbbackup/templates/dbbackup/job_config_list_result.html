@@ -7,43 +7,43 @@
             <li class="ik-li list-group-item {{ obj.status }}" id="{{ obj.id }}" data-id="{{ obj.id }}" style="border: none;">
                 <a href="{{ obj_url }}">
                     <div class="event">
-                        <div class="subtle-shade event-detail">
-                            <div class="event-icon pull-left">
+                        <div class="subtle-shade event-detail" style="height: 140px;">
+                            <div class="event-icon pull-left" style="inherit">
                                 <img src="{% static 'dbbackup/img/isometric-cloud-computing-concept-represented-by-a-server-with-a-vector-id969567772.jpg' %}" />
                             </div>
-                            <div class="event-content">
-                                <div>
-                                    <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'Hostname' %}</b>
-                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0;">{{ obj.hostname }}</div>
+                            <div class="event-content" style="color: #464646; height: inherit;">
+                                <div style="margin-bottom: 5px">
+                                    <div class="col-md-8 row"><b>{{ obj.db_type }} </b> {% trans ' on ' %} {{ obj.hostname }}</div>
+                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding: 0;"><time>{{ obj.created_on }}</time></div>
                                     <div class="clearfix"></div>
                                 </div>
-                                <div>
-                                    <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'Database type' %}</b>
-                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0;">{{ obj.db_type }}</div>
-                                    <div class="clearfix"></div>
-                                </div>
-                                <div>
-                                    <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'Database name' %}</b>
-                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0;">{{ obj.db_name }}</div>
-                                    <div class="clearfix"></div>
-                                </div>
-                                <div>
-                                    <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'Run every' %}</b>
-                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0;">{{ obj.run_every }} hours</div>
-                                    <div class="clearfix"></div>
-                                </div>
-                                <div>
-                                    <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'Saved on' %}</b>
-                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0; color: mediumblue; font-weight: bolder">{{ obj.created_on }}</div>
-                                    <div class="clearfix"></div>
-                                </div>
-                                {% for destination_server in obj.destination_server_list %}
-                                    <div>
-                                        <b href="javascript;" class="col-sm-6 row" style="font-size: 1.2em">{% trans 'Destination server' %}{{ forloop.counter }}</b>
-                                        <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0;">{{ destination_server }}</div>
-                                        <div class="clearfix"></div>
+                                <div style="margin-bottom: 5px">
+                                    <div class="col-md-8 row" style="">
+                                        {% trans 'Database: ' %}
+                                        <b>
+                                            {% if obj.db_name %}
+                                                {{ obj.db_name }}
+                                            {% else %}
+                                                all
+                                            {% endif %}
+                                        </b>
                                     </div>
-                                {% endfor %}
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div style="margin-bottom: 5px">
+                                    <div class="col-md-8 row">{% trans 'Run every: ' %}{{ obj.run_every }} hours</div>
+                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0;"></div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div style="margin-bottom: 5px">
+                                    <div class="col-md-8 row">
+                                        {% trans 'Destination servers: ' %}
+                                        {% for destination_server in obj.destination_server_list %}
+                                            {{ destination_server }} &nbsp;&nbsp;
+                                        {% endfor %}
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
                             </div>
                             <div class="clearfix"></div>
                         </div>

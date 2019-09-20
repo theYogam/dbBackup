@@ -18,7 +18,7 @@ from ikwen.core.views import HybridListView, ChangeObjectBase
 
 from pymongo import MongoClient
 import urllib
-from pymongo.errors import ConnectionFailure
+from pymongo.errors import ConnectionFailure, PyMongoError, ConfigurationError
 
 
 from dbbackup.models import JobConfig, DestinationServer, Backup
@@ -31,6 +31,7 @@ import paramiko
 
 
 class Home(TemplateView):
+    """code"""
     template_name = 'dbbackup/home.html'
 
     def get_context_data(self, **kwargs):
@@ -39,6 +40,7 @@ class Home(TemplateView):
 
 
 class JobConfigList(HybridListView):
+    """ code"""
     model = JobConfig
     ordering = ('-id',)
     # search_field = 'db_name'
@@ -51,14 +53,16 @@ class JobConfigList(HybridListView):
 
 
 class ChangeJobConfig(ChangeObjectBase):
+    """
+    code
+    """
     model = JobConfig
     model_admin = JobConfigAdmin
     template_name = 'dbbackup/change_job_config.html'
 
     def post(self, request, *args, **kwargs):
-        # context = self.get_context_data(**kwargs)
         context = super(ChangeJobConfig, self).get_context_data(**kwargs)
-        job_config_form = JobConfigForm(request.GET)
+        job_config_form = JobConfigForm(request.POST)
         if job_config_form.is_valid():
             hostname = job_config_form.cleaned_data.get("hostname")
             db_name = job_config_form.cleaned_data.get("db_name")
@@ -78,83 +82,57 @@ class ChangeJobConfig(ChangeObjectBase):
                                        field in job_config_form if field not in job_config_form.cleaned_data]
             i = 1
             destination_server_list = []
+
             while True:
                 try:
-                    ip = request.GET['ip%d' % i]
-                    username = request.GET['username%d' % i]
-                    password = request.GET['password%d' % i]
+
+                    ip = request.POST['ip%d' % i]
+                    username = request.POST['username%d' % i]
+                    password = request.POST['password%d' % i]
                     destination_server = {
                         'ip': ip,
                         'username': username,
                         'password': password
                     }
                     destination_server_form = DestinationServerForm(destination_server)
+
                     if destination_server_form.is_valid():
-                        destination_server_uncleaned_data_list = [{field.name: field.value()}
-                                                                  for field in destination_server_form
-                                                                  if field not in destination_server_form.cleaned_data]
-                        if destination_server_uncleaned_data_list.__len__() > 0 \
-                                and job_uncleaned_data_list.__len__() > 0:
-                            context['destination_server_uncleaned_data_list'] = destination_server_uncleaned_data_list
-                            context['job_uncleaned_data_list'] = job_uncleaned_data_list
-                            context = self.get_context_data(**kwargs)
-                            return render(request, self.template_name, context)
-                            # errors = {'job_uncleaned_data_list': job_uncleaned_data_list,
-                            #           'destination_server_uncleaned_data_list':
-                            #           destination_server_uncleaned_data_list}
-                            # return HttpResponse(json.dumps({'success': True, 'errors': errors}),
-                            #                     'content-type: text/json')
-                        else:
-                            if destination_server_uncleaned_data_list.__len__() > 0:
-                                context['destination_server_uncleaned_data_list'] =\
-                                    destination_server_uncleaned_data_list
-                                context = self.get_context_data(**kwargs)
-                                return render(request, self.template_name, context)
-                                # errors = {'destination_server_uncleaned_data_list':
-                                # destination_server_uncleaned_data_list}
-                                # return HttpResponse(json.dumps({'success': True, 'errors': errors}),
-                                #                     'content-type: text/json')
-                            elif job_uncleaned_data_list.__len__() > 0:
-                                context['job_uncleaned_data_list'] = job_uncleaned_data_list
-                                context = self.get_context_data(**kwargs)
-                                return render(request, self.template_name, context)
-                                # errors = {'job_uncleaned_data_list': job_uncleaned_data_list}
-                                # return HttpResponse(json.dumps({'success': True, 'errors': errors}),
-                                #                     'content-type: text/json')
                         destination_server_form.save()
-                        destination_server = DestinationServer.objects.create(ip=ip,
-                                                                              username=username,
+                        destination_server = DestinationServer.objects.create(ip=ip, username=username,
                                                                               password=password)
 
                         destination_server_list.append(destination_server)
                         job_config.destination_server_list = destination_server_list
 
                     else:
-                        context = self.get_context_data(**kwargs)
-                        context['destination_server_errors_field_list'] = destination_server_form.errors
+                        context['destination_server_form'] = destination_server_form
                         return render(request, self.template_name, context)
                 except:
                     break
                 i += 1
 
-            # if i != 1:
-            job_config.save()
-            # path = os.path.realpath(__file__)
-            # path = path.replace('views', 'schedulerCron')
-            # subprocess.call(['python', str(path), str(job_config.run_every), job_config.id])
-            next_url = reverse('dbbackup:change_jobconfig', args=(job_config.id,))
-            return HttpResponseRedirect(next_url)
+            if i == 1:
+                context['destination_server_form'] = "No destination server configured"
+                return render(request, self.template_name, context)
+            else:
+                job_config.save()
+                next_url = reverse('dbbackup:change_jobconfig', args=(job_config.id,))
+                return HttpResponseRedirect(next_url)
 
         else:
-            context = self.get_context_data(**kwargs)
-            context['job_error_field_list'] = job_config_form.errors
+            context['form'] = job_config_form
             return render(request, self.template_name, context)
 
     def get_context_data(self, **kwargs):
+        """
+        :param kwargs:
+        :return:
+        """
         context = super(ChangeJobConfig, self).get_context_data(**kwargs)
         if kwargs.__len__() > 0:
             job_config_id = kwargs['object_id']
             most_recent_backup = Backup.objects.filter(job_config_id=job_config_id).order_by('start_time')[:4]
+            context['destination_server_list'] = JobConfig.objects.get(id=job_config_id).destination_server_list
             context['most_recent_backup'] = most_recent_backup
         else:
             context['no_backup_history'] = 'No backups yet exist for this Job'
@@ -163,12 +141,19 @@ class ChangeJobConfig(ChangeObjectBase):
 
 
 class BackupList(HybridListView):
+    """
+    comment
+    """
     model = Backup
     ordering = ('-id',)
     list_filter = ('status', 'start_time')
     html_results_template_name = 'dbbackup/backup_list_result.html'
 
     def get_context_data(self, **kwargs):
+        """
+        :param kwargs:
+        :return:
+        """
         context = super(BackupList, self).get_context_data(**kwargs)
         if kwargs.__len__() > 0:
             backup_id = kwargs['object_id']
@@ -184,6 +169,13 @@ class BackupList(HybridListView):
 
 
 def test_db_connection(request, *args, **kwargs):
+    """
+
+    :param request:
+    :param args:
+    :param kwargs:
+    :return:
+    """
     hostname = request.GET.get('hostname')
     db_username = request.GET.get('db_username')
     db_password = request.GET.get('db_password')
@@ -198,15 +190,13 @@ def test_db_connection(request, *args, **kwargs):
             uri += username + ':' + password + '@'
         elif username:
             uri += username + '@'
-        elif password:
-            uri += ':' + password + '@'
         uri += hostname + ':27017/?authSource=admin&authMechanism=MONGODB-CR'
 
         try:
             client = MongoClient(uri)
             return HttpResponse(json.dumps({'success': True}), 'content-type: text/json')
 
-        except ConnectionFailure:
+        except PyMongoError as e:
             return HttpResponse(json.dumps({'success': False}), 'content-type: text/json')
     # elif db_type == 'MySQL':
     #     pass
@@ -215,6 +205,13 @@ def test_db_connection(request, *args, **kwargs):
 
 
 def test_destination_server_connection(request, *args, **kwargs):
+    """
+
+    :param request:
+    :param args:
+    :param kwargs:
+    :return:
+    """
     server_ip = request.GET.get('ip')
     server_username = request.GET.get('username')
     server_password = request.GET.get('password')
@@ -225,9 +222,8 @@ def test_destination_server_connection(request, *args, **kwargs):
                               password=server_password)
     except (paramiko.SSHException, paramiko.AuthenticationException, paramiko.BadAuthenticationType,
             paramiko.AUTH_FAILED, paramiko.ssh_exception) as e:
-        return HttpResponse(json.dumps({'success': False, 'error': e}), 'content-type: text/json')
+        return HttpResponse(json.dumps({'success': False, 'error': e.message}), 'content-type: text/json')
 
     return HttpResponse(json.dumps({'success': True}), 'content-type: text/json')
-
 
 

@@ -1,11 +1,11 @@
 This following tools are required to run this application on the server which executes it.
 
-1. Openssh-client and openssh-server
-2.
-3. Add the following command in the crontab file: * /1 * * * python cron.py
+1. Install pip via the command: sudo apt-get install pip
+2. Istall virtualenv via the command: pip install virtualenv
+2. Create a virtualenv via: virtualenv name_of_your_virtualenv
+3. Install Openssh-client and openssh-server via the command: sudo apt-get install openssh-client && sudo apt-get install openssh-server
+4. Install p7zip via the command : sudo apt-get install p7zip-full p7zip-rar
+6. Install paramiko via the command : pip install paramiko
+7. Add the following command in the crontab file: * /1 * * * python cron.py
 
 
-
-Tips:
-1. Install openssh-client and openssh-server
-2. Start ssh service thru command '$sudo service ssh start'
