@@ -8,7 +8,6 @@ admin.autodiscover()
 urlpatterns = patterns(
     '',
     url(r'^$', Home.as_view(), name='home'),
-    url(r'^kakocase/', include('ikwen_kakocase.kakocase.urls', namespace='kakocase')),
     url(r'^webnode/', include('ikwen_webnode.webnode.urls', namespace='webnode')),
     url(r'^jobConfigurationList$', JobConfigList.as_view(), name='jobconfig_list'),
     url(r'^jobConfig$', ChangeJobConfig.as_view(), name='change_jobconfig'),
