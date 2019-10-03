@@ -28,10 +28,10 @@
 {% block site_menu %}{% endblock %}
 
 {% block page_content %}
-    <section class="main-feat banner site">
+    <section class="main-feat banner site" style="padding-top: 15vh" >
         <div class="container">
             <div class="row desc">
-                <div class="col-sm-5 col-md-8 col-md-push-2" style="text-align: center;">
+                <div class="col-sm-5 col-md-10 col-md-push-1" style="text-align: center;">
                     <h1 style="margin-top: 0px; line-height: 75px; text-align: center;">{% trans "Automating and scheduling backups from your cluster of databases" %}</h1>
                     <p>
 {#                      Prevent your users data against deletion, #}
@@ -40,30 +40,41 @@
                             Holding a big cluster of databases is not easy to manage safely.
                             DBBackup is the app that prevents your users' data from leaks,
                             deletion and corruption by storing them into many remote servers.
-                            <br>Don't wait things to go wrong !!!
                         {% endblocktrans %}
                     </p>
+                    <h4>{% trans "Don't wait things to go wrong !!!" %}</h4>
                     <a id="deploy" class="btn btn-md cta" style="margin-top: 30px; letter-spacing: 2px;" href="{% url 'dbbackup:change_jobconfig' %}"><b>{% trans "Backup now" %}</b></a>
                 </div>
             </div>
         </div>
     </section>
-    <section class="main-feat banner site" style="background-image: url('{% static 'dbbackup/img/SystemsHero.jpg' %}');">
-{#        <div class="container">#}
-{#            <div class="row desc">#}
-{#                <div class="col-sm-10">#}
-{#                    <img src="{% static 'dbbackup/img/SystemsHero.jpg' %}" alt="Automating and scheduling backups from your cluster of databases" style="width: 100%"/>#}
+    <section class="main-feat banner site" style="color: #fff;margin-top: 10vh; background-image: url('{% static 'dbbackup/img/SystemsHero.jpg' %}');">
+        <div class="container">
+            <div class="row desc">
+                <div class="col-md-3 col-lg-push-1" style="width: 45%;">
+                    <img class="img-responsive" style="width: 100%" src="{% static 'dbbackup/img/job_config.png' %}">
+                    <ol style="font-weight: bold">
+                        <li>Configure a job</li>
+                    </ol>
+                </div>
+                <div class="col-md-3 col-lg-push-1" style="width: 45%;">
+                    <img class="img-responsive " style="width: 100%" src="{% static 'dbbackup/img/job_config_list.png' %}">
+                    <ol style="font-weight: bold">
+                        <li><b>Visualize backups in real time</b></li>
+                    </ol>
+                </div>
+{#                <div class="col-md-3" style="width: auto;">#}
+{#                    <img class="img-responsive " src="{% static 'dbbackup/img/backup_list.png' %}">#}
 {#                </div>#}
-{#            </div>#}
-{#        </div>#}
-
+            </div>
+        </div>
     </section>
 
     <section class="features site effective-solution listing">
         <div class="container">
             <h2 style="text-align: center;">{% trans "Support for a multiple types of Databases" %}</h2>
             <div class="row features text-center">
-                <div class="col-sm-2">
+                <div class="col-sm-2 col-md-offset-1">
                     <img class="img-responsive"  src="{% static 'dbbackup/img/MySQL.svg.png' %}">
                 </div>
                 <div class="col-sm-2">
@@ -74,9 +85,6 @@
                 </div>
                 <div class="col-sm-2">
                     <img class="img-responsive"  src="{% static 'dbbackup/img/firebase_logo_maxresdefault.png' %}">
-                </div>
-                <div class="col-sm-2">
-                    <img class="img-responsive"  src="{% static 'dbbackup/img/oracle-logojpg_maxresdefault.jpg' %}">
                 </div>
                 <div class="col-sm-2">
                     <img class="img-responsive"  src="{% static 'dbbackup/img/1280px-Cassandra_logo.svg.png' %}">

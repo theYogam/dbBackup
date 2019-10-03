@@ -29,6 +29,12 @@ import json
 import subprocess
 import paramiko
 
+import sys
+
+
+reload(sys)
+sys.setdefaultencoding('utf-8') # Allow system to decode utf-8's strings such as ',",|,?
+
 
 class Home(TemplateView):
     """code"""
@@ -181,6 +187,9 @@ def test_db_connection(request, *args, **kwargs):
     db_password = request.GET.get('db_password')
     db_type = request.GET.get('db_type')
 
+    if not hostname:
+        return HttpResponse(json.dumps({'success': False}), 'content-type: text/json')
+
     if db_type == 'MongoDB':
         uri = 'mongodb://'
         username = urllib.quote_plus(db_username)
@@ -190,6 +199,7 @@ def test_db_connection(request, *args, **kwargs):
             uri += username + ':' + password + '@'
         elif username:
             uri += username + '@'
+
         uri += hostname + ':27017/?authSource=admin&authMechanism=MONGODB-CR'
 
         try:
