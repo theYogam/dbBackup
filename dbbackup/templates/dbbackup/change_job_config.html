@@ -1,0 +1,692 @@
+{% extends 'core/change_object_base.html' %}
+{% load i18n static humanize user_agents auth_tokens media_from_provider cache %}
+
+{% block head_style %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'echo/css/swiper.min.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'embed-doc/css/embed-doc.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'echo/css/echo.css' %}"/>
+{% endblock %}
+
+{% block admin_content %}
+     <div id="admin-content">
+        <div class="container-fluid">
+            <div class="form col-lg-4 col-sm-6 col-lg-offset-4 col-sm-offset-3" >
+                {% if form.errors %}
+                    {% for error in form.errors %}
+                        <p class="alert alert-danger">{{ error }} is invalid</p>
+                    {% endfor %}
+                {% endif %}
+                {% if destination_server_form.errors %}
+                    {% for error in destination_server_form.errors %}
+                        <p class="alert alert-danger">{{ error }} is invalid</p>
+                    {% endfor %}
+
+                {% else %}
+                    {% if destination_server_form %}
+                        <p class="alert alert-danger">{{ destination_server_form }}</p>
+                    {% endif %}
+                {% endif%}
+                {% if destination_server_errors %}<p class="alert alert-danger">{{ destination_server_errors }}</p>{% endif %}
+                {% for uncleaned_data in destination_server_uncleaned_data_list %} {{ uncleaned_data }} {% endfor %}
+                {% for uncleaned_data in job_uncleaned_data_list %} {{ uncleaned_data }} {% endfor %}
+
+                <!---- Tags which help to display errors while sending bad input data  ---->
+                    <!---- BEGIN ---->
+                    <span id="helpBlock" class="help-block tpl">
+                        <span style='top:18px' class='glyphicon glyphicon-remove-sign form-control-feedback' aria-hidden='true'></span>
+                    </span>
+                    <span id="helpBlock1" class="help-block tpl">
+                        <span style='top:18px' class='glyphicon glyphicon-warning-sign form-control-feedback' aria-hidden='true'></span>
+                    </span>
+                    <!---- END ---->
+                <form class="job-config-form" style="padding: 0 15px 0" method="post">
+                    {% csrf_token %}
+                        <h3 style="margin-bottom: 15px; font-weight: 600;">{% trans "Job Configuration" %}</h3>
+                        <label style="margin: 20px 0">{% trans 'Fill the database server information' %}</label>
+                        {% if job_config_id %}
+                            {% include 'core/snippets/model_admin_form.html' %}
+                        {% else %}
+                            <div class="form-row field-hostname form-group">
+                            <div class="">
+                                <label class="required" for="id_hostname">Hostname:</label>
+                                <input id="id_hostname" name="hostname" type="text" placeholder="127.0.0.1" class="form-control input-sm" required="required">
+                            </div>
+                        </div>
+                        <div class="form-row field-db_type form-group">
+                            <div class="">
+                                <label class="required" for="id_db_type">Database type:</label>
+                                <select id="id_db_type" name="db_type" class="form-control input-sm" required="required">
+                                    <option value="" selected="selected">---------</option>
+                                    <option value="MySQL">MySQL</option>
+                                    <option value="MongoDB">MongoDB</option>
+                                    <option value="PostgreSQL">PostgreSQL</option>
+                                    <option value="Firebase">Firebase</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row field-db_name form-group">
+                            <div>
+                                <label for="id_db_name">Database name:</label>
+                                <input id="id_db_name" maxlength="100" name="db_name" type="text" placeholder="laakam" class="form-control input-sm">
+                            </div>
+                        </div>
+                        <div class="form-row field-db_username form-group">
+                            <div class="">
+                                <label for="id_db_username">Database username:</label>
+                                <input id="id_db_username" maxlength="100" name="db_username" type="text" class="form-control input-sm" placeholder="arch">
+                            </div>
+                        </div>
+                        <div class="form-row field-db_password form-group">
+                            <div>
+                                <label for="id_db_password">Database password:</label>
+                                <input id="id_db_password" maxlength="100" name="db_password" type="text" class="form-control input-sm" placeholder="************">
+                            </div>
+                        </div>
+                        <div class="form-row field-run_every form-group">
+                            <div>
+                                <label class="required" for="id_run_every">Run every:</label>
+                                <select id="id_run_every" name="run_every" class="form-control input-sm" required="required">
+                                    <option value="" selected="selected">---------</option>
+                                    <option value="3">3</option>
+                                    <option value="6">6</option>
+                                    <option value="12">12</option>
+                                    <option value="24">24</option>
+                                </select>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="second-section-form tpl">
+                            <div style="margin: 40px 0; padding-top: 20px; border-top: groove 1px;">
+                                <label>{% trans 'Fill information of remote destination server(s) where backups will be stored' %}</label>
+                            </div>
+                            <div class="destination-server new-dest-server tpl">
+                                <div class="form-group row" style="margin-left: 0px!important; margin-right: 0px!important;">
+                                    <h4 style="float: left;"></h4>
+                                    <button type="button"  class=" btn btn-warning glyphicon glyphicon-minus remove-server" style="float: right; height: inherit; min-width: 0;"></button>
+                                </div>
+                                <div class="form-group">
+                                    <label for="server-ip">{% trans 'Server IP' %}:</label>
+                                    <input type="text" class="form-control input-sm server-ip"  placeholder="192.168.0.25">
+                                </div>
+                                <div class="form-group">
+                                    <label for="server-username">{% trans 'Username' %}:</label>
+                                    <input type="text" class="form-control input-sm server-username"  placeholder="Siaka">
+                                </div>
+                                <div class="form-group">
+                                    <label for="server-password">{% trans 'Password' %}:</label>
+                                    <input type="password" class="form-control input-sm server-password" placeholder="**************">
+                                </div>
+                            </div>
+
+                            {% if destination_server_list %}
+                                {% for destination_server in destination_server_list %}
+                                    <div class="destination-server destination-server-already-exists">
+                                        <div class="form-group row" style="margin-left: 0px!important; margin-right: 0px!important;">
+                                            <h4 style="float: left;">Destination Server {{ forloop.counter }}</h4>
+                                            <button type="button"  class=" btn btn-warning glyphicon glyphicon-minus remove-server" style="float: right; height: inherit; min-width: 0;"></button>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="server-ip">{% trans 'Server IP' %}:</label>
+                                            <input type="text" class="form-control input-sm server-ip"  name="ip{{ forloop.counter }}" placeholder="192.168.0.25" value="{{ destination_server.ip }}" required="required">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="server-username">{% trans 'Username' %}:</label>
+                                            <input type="text" class="form-control input-sm server-username" name="username{{ forloop.counter }}" placeholder="Siaka" value="{{ destination_server.username }}" required="required">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="server-password">{% trans 'Password' %}:</label>
+                                            <input type="password" class="form-control input-sm server-password" name="password{{ forloop.counter }}" placeholder="**************" value="{{ destination_server.password }}" required="required">
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+
+                            <div class="form-group add-dest-server">
+                                <button type="button" id="add-destination-server" class=" btn btn-md btn-block btn-primary ">{% trans 'Add destination server' %}</button>
+                            </div>
+                            <div class="form-group test-dest-servers tpl">
+                                <button type="button" id="test-destination-servers" class=" btn btn-md btn-block btn-primary"  data-toggle="modal" style="background-color: #5879ef; color: #fff; border: none;">{% trans 'Check' %}</button>
+{#                                data-target="#modal-test-destination-servers"#}
+                            </div>
+                            <div class="form-group btn-save">
+                                <button id="btn-save" class="form-control btn btn-success btn-md" role="button"> {% trans "Save" %}</button>
+                            </div>
+                        </div>
+                </form>
+            </div>
+            <!-- Modal 1 -->
+            <!-- Modal Begin -->
+            <div id="modal-test-db-server"  class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-test-db-server-label" >
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content" style="background-color: #f4fbfe;">
+                        <div style="text-align: center; padding: 25px;">
+{#                            class="modal-body "#}
+                            <h4 class="modal-title">Please wait for while to test connection to DB server</h4>
+                            <div style="display: inline-block; margin: auto;">
+                                <img style="" src="{% static 'dbbackup/img/spinning-wheel.gif' %}">
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal End-->
+
+            <!-- Modal 2 -->
+            <!-- Modal Begin -->
+            <div id="modal-test-destination-servers"  class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-test-destination-servers-label" >
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content" style="background-color: #f4fbfe;">
+                        <div style="text-align: center; padding: 25px;">
+{#                            class="modal-body "#}
+                            <h4 class="modal-title">Please wait for while to test connection to all destinations servers</h4>
+                            <div style="display: inline-block; margin: auto;">
+                                <img style="" src="{% static 'dbbackup/img/spinning-wheel.gif' %}">
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal End-->
+            <div class="stage">
+                <div class="col-lg-8 col-lg-offset-2 col-sm-offset-3 col-sm-6" style="margin-top: 10.5vh;">
+                    <div id="pending-invoices">
+                        {% if most_recent_backup %}
+                            <h4 style="margin-bottom: 20px">{% blocktrans %}Most recent backups{% endblocktrans %}</h4>
+                            <div class="actions">
+                                <a href="{% url 'dbbackup:backup_list' object_id=most_recent_backup|first %}">
+                                    <button class="btn btn-success pull-right btn-sm payment-start" >
+                                        {% trans "Show more" %}
+                                    </button>
+                                </a>
+                            </div>
+                            <div class="clearfix"></div>
+                                {% for backup in most_recent_backup %}
+                                        <div class="event" style="">
+                                            <div class="subtle-shade event-detail" style="height: 140px; padding: 0;">
+                                                <div class="event-icon pull-left" style="height: inherit; margin: 0;">
+                                                    <img src="{% static 'dbbackup/img/isometric-cloud-computing-concept-represented-by-a-server-with-a-vector-id969567772.jpg' %}" />
+                                                </div>
+                                                <div class="event-content" style="height: inherit;">
+                                                    <div style="margin-bottom: 5px">
+                                                        <div class="col-md-8 row"><b>{{ backup.job_config.db_type }} </b> {% trans ' on ' %} {{ backup.job_config.hostname }}</div>
+                                                        <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding: 0;"><time>{{ backup.start_time }}</time></div>
+                                                        <div class="clearfix"></div>
+                                                    </div>
+                                                    <div style="margin-bottom: 5px">
+                                                        <div class="col-md-12 row" style=""> {% trans 'Database: ' %}<b>{{ backup.job_config.db_name }}</b></div>
+                                                        <div class="clearfix"></div>
+                                                    </div>
+
+                                                    <div style="margin-bottom: 5px">
+                                                        <div class="col-md-12 row" style=""> {{ backup.job_config.destination_server_list|length }} </b>{% trans 'destination server(s)' %}</div>
+                                                        <div class="col-sm-4 row text-muted pull-right text-right" style="color: #2daacd; font-weight: bolder">{{ backup.status}}</div>
+                                                        <div class="clearfix"></div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                {% endfor %}
+                        {% else %}
+                            <h5>{{ no_backup_history }}</h5>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    <script>
+        $(function () {
+
+            var endpoint;
+            var $ip, $username, $password, param, params;
+            var destServerIndex = 0, prevDestServerIndex = 0;
+            var isDBTypeHandlerSet;
+            var isHostnameHandlerSet;
+            var isOneDestServerNotSet;
+            var isDestServerHasError;
+            var numberOfCheckedServers;
+            var $hostname, $db_username, $db_password, $db_type;
+            var $error_fields;
+            $('#id_hostname, #id_db_type, #id_run_every').attr({'required': 'required'});
+            isHostnameHandlerSet = false;
+            isDBTypeHandlerSet = false;
+            isOneDestServerNotSet = false;
+            $hostname = $('#id_hostname');
+            $db_username = $('#id_db_username');
+            $db_password = $('#id_db_password');
+            $db_type = $('#id_db_type');
+
+            /* Whenever a user focus (meaning, he has the intend to change an input) on an input of an old job config, we need to recheck connectivity */
+
+
+            if ($('body').find('.destination-server').hasClass('destination-server-already-exists')){
+                $('.job-config-form').addClass('previous-job-config-form');
+            }
+
+            $('.previous-job-config-form input, .previous-job-config-form select, .add-dest-server input, .destination-server-already-exists input').on('focus', function () {
+                $('body').find('.btn-save').addClass('tpl');
+                $('body').find('.test-dest-servers').removeClass('tpl');
+            });
+
+            if ($('body').find('.job-config-form').hasClass('job-config-form-checked')){
+               $('.job-config-form-checked input, .job-config-form-checked select').on('focus', function () {
+                    console.log('Do you reach here bro ?');
+                    $('body').find('.btn-save').addClass('tpl');
+                    $('body').find('.test-dest-servers').removeClass('tpl');
+                    check_db_server_form();
+                    $('body').find('.job-config-form').removeClass('job-config-form-checked');
+                });
+            }
+
+            /* This is what happen when clicking on add destination server button */
+            $('body').on('click', "#add-destination-server", function () {
+               var endpoint;
+                endpoint = "{% url 'dbbackup:test_db_connection' %}";
+                param = {
+                'hostname': $hostname.val(),
+                'db_username': $db_username.val(),
+                'db_password': $db_password.val(),
+                'db_type': $db_type.val(),
+                };
+                /* When you add a new destination server, you need to check the connectivity to it.*/
+                if(destServerIndex > 0){
+                    $('body').find('.btn-save').addClass('tpl');
+                    $('body').find('.test-dest-servers').removeClass('tpl');
+                }
+
+                /* Open a modal for an unpredictible delay time.*/
+                $('#modal-test-db-server').modal
+                (
+                    {backdrop: 'static'}
+                );
+
+                /* Checking input data before respond */
+                if ($db_type.val()!=='' && $db_type.val()!== 'MongoDB'){
+                    $error_fields = $('.job-config-form').find('.has-feedback').toArray();
+                    $.each($error_fields, function (i, el) {
+                        removeErrorMessage($(el));
+                    });
+                    $('#helpBlock1.tpl').clone().removeClass('tpl').insertAfter($db_type).
+                    append($db_type.val() + ' is not yet taken in consideration').parent()
+                        .addClass('has-warning has-feedback');
+                    $('#modal-test-db-server').modal('hide');
+                    return false;
+                }
+
+                if ($hostname.val() !== '' && $db_type.val() !== '') {
+                    $.getJSON(endpoint, param, function (data, jqXHR, status) {
+                        if (data.success) {
+                            cloningDestinationServer();
+                            prevDestServerIndex = destServerIndex;
+                            destServerIndex++;
+                            if(destServerIndex === 1){
+                                $('body').find('.btn-save').addClass('tpl');
+                                $('body').find('.test-dest-servers').removeClass('tpl');
+                            }
+                            $error_fields = $('.job-config-form').find('.has-feedback').toArray();
+                            $.each($error_fields, function (i, el) {
+                                removeErrorMessage($(el));
+                            });
+                            $('#modal-test-db-server').modal('hide');
+                            return true;
+                        } else {
+                            if ($db_username.val() !== '' && $db_password.val() !== '') {
+                                $error_fields = $('.job-config-form').find('.has-feedback').toArray();
+                                $.each($error_fields, function (i, el) {
+                                    removeErrorMessage($(el));
+                                });
+                                $.each([$hostname, $db_username, $db_password, $db_type], function (index, element) {
+                                    displayErrorMessage(element);
+                                });
+                                $('#modal-test-db-server').modal('hide');
+                                return false;
+                            }
+                            if ($db_username.val() !== '') {
+                                $error_fields = $('.job-config-form').find('.has-feedback').toArray();
+                                $.each($error_fields, function (i, el) {
+                                    removeErrorMessage($(el));
+                                });
+                                $.each([$hostname, $db_username, $db_type], function (index, element) {
+                                    displayErrorMessage(element);
+                                });
+                                $('#modal-test-db-server').modal('hide');
+                                return false;
+                            }
+                            if ($db_password.val() !== '') {
+                                $error_fields = $('.job-config-form').find('.has-feedback').toArray();
+                                $.each($error_fields, function (i, el) {
+                                    removeErrorMessage($(el));
+                                });
+                                $.each([$hostname, $db_password, $db_type], function (index, element) {
+                                    displayErrorMessage(element);
+                                });
+                                $('#modal-test-db-server').modal('hide');
+                                return false;
+                            }
+                            $error_fields = $('.job-config-form').find('.has-feedback').toArray();
+                            $.each($error_fields, function (i, el) {
+                                removeErrorMessage($(el));
+                            });
+                            $.each([$hostname, $db_type], function (index, element) {
+                                displayErrorMessage(element);
+                            });
+                            $('#modal-test-db-server').modal('hide');
+                            return false;
+                        }
+                    });
+                }
+                if ($hostname.val() === '') {
+                    if (!isHostnameHandlerSet) {
+                        $error_fields = $('.job-config-form').find('.has-feedback').toArray();
+                        $.each($error_fields, function (i, el) {
+                            removeErrorMessage($(el));
+                        });
+                        handler($hostname);
+                        isHostnameHandlerSet = true;
+                    }
+                    $('#modal-test-db-server').modal('hide');
+                    return false;
+                }
+                if ($db_type.val() === '') {
+                    if (!isDBTypeHandlerSet) {
+                        $error_fields = $('.job-config-form').find('.has-feedback').toArray();
+                        $.each($error_fields, function (i, el) {
+                            removeErrorMessage($(el));
+                        });
+                        handler($db_type);
+                        isDBTypeHandlerSet = true;
+                    }
+                    $('#modal-test-db-server').modal('hide');
+                    return false;
+                }
+            });
+
+            /* This what happens whenever you remove a destination server */
+
+            $('body').on('click', '.remove-server', function () {
+                $(this).parents('.destination-server').remove();
+                reIndex();
+                prevDestServerIndex = destServerIndex;
+                destServerIndex--;
+                if (destServerIndex === 0 && $('body').find('.btn-save').hasClass('tpl')){
+                    $('body').find('.btn-save').removeClass('tpl');
+                    $('body').find('.test-dest-servers').addClass('tpl');
+                }
+            }).on('click', '#test-destination-servers', () => {
+                var destServers;
+                var numberOfDestinationServers;
+                endpoint = "{% url 'dbbackup:test_destination_server_connection' %}";
+                /*
+                if ($('body').find('.job-config-form').hasClass('job-config-form-checked')){
+                    $('.job-config-form input, .job-config-form select').on('focus', function () {
+                       $('body').find('.btn-save').addClass('tpl');
+                       $('body').find('.test-dest-servers').removeClass('tpl');
+                       check_db_server_form();
+                    });
+                }
+                */
+
+                if ($('body').find('.destination-server').hasClass('destination-server-already-exists')) {
+                    destServers = $('.destination-server-already-exists').toArray();
+                } else {
+                    destServers = $('.destination-server:not(.tpl)').toArray();
+                }
+                numberOfDestinationServers = destServers.length;
+
+                $ip = new Array(numberOfDestinationServers);
+                $username = new Array(numberOfDestinationServers);
+                $password = new Array(numberOfDestinationServers);
+                params = new Array(numberOfDestinationServers);
+                $('#modal-test-destination-servers').modal(
+                    {backdrop: 'static'}
+                );
+
+                $.each(destServers, function(index, destServer) {
+                    $ip[index] = $(destServer).find('.server-ip');
+                    $username[index] = $(destServer).find('.server-username');
+                    $password[index] = $(destServer).find('.server-password');
+                    params[index] = {
+                        'ip': $ip[index].val(),
+                        'username': $username[index].val(),
+                        'password': $password[index].val()
+                    };
+                    removeErrorMessage($(destServer).find('.server-ip').parent());
+                    removeErrorMessage($(destServer).find('.server-username').parent());
+                    removeErrorMessage($(destServer).find('.server-password').parent());
+
+                    if ($ip[index].val() === '') {
+                        handler($ip[index]);
+                        isOneDestServerNotSet = true;
+                    }
+                    if ($username[index].val() === '') {
+                        handler($username[index]);
+                        isOneDestServerNotSet = true;
+                    }
+                    if ($password[index].val() === '') {
+                        handler($password[index]);
+                        isOneDestServerNotSet = true;
+                    }
+                });
+
+                if (isOneDestServerNotSet) {
+                    isOneDestServerNotSet = false;
+                    $('#modal-test-destination-servers').modal('hide');
+                    return false;
+                }
+
+                numberOfCheckedServers = 0;
+                $.each(destServers, function(index, destServer) {
+                    $.getJSON(endpoint, params[index], function (data, jqXHR, status) {
+                        if (data.success) {
+                            numberOfCheckedServers++;
+                            if (index === (numberOfDestinationServers-1) && numberOfCheckedServers === numberOfDestinationServers) {
+                                $('.test-dest-servers').addClass('tpl');
+                                $('.btn-save').removeClass('tpl');
+                                $('.job-config-form').addClass('job-config-form-checked');
+                                $('#modal-test-destination-servers').modal('hide');
+                                return;
+                            }
+                            if (index === (numberOfDestinationServers-1) && numberOfCheckedServers !== numberOfDestinationServers) {
+                                $('#modal-test-destination-servers').modal('hide');
+                                return false;
+                            }
+                        }
+                        $.each([$ip[index], $username[index], $password[index]], function (i, element) {
+                            displayErrorMessage(element);
+                            if (index === (numberOfDestinationServers-1)){
+                                $('#modal-test-destination-servers').modal('hide');
+                            }
+                        });
+                    }, 'json');
+                    if (index === (numberOfDestinationServers-1)){
+                       return true  ;
+                    }
+                });
+
+            });
+
+
+            if ($('body').find('.job-config-form').hasClass('job-config-form-checked')){
+               $('.job-config-form-checked input, .job-config-form-checked select').on('focus', function () {
+                    console.log('Do you reach here bro ?');
+                    $('body').find('.btn-save').addClass('tpl');
+                    $('body').find('.test-dest-servers').removeClass('tpl');
+                    check_db_server_form();
+                    $('body').find('.job-config-form').removeClass('job-config-form-checked');
+                });
+            }
+
+
+            function handler($selector) {
+                $('#helpBlock1.tpl').clone().removeClass('tpl').insertAfter($selector)
+                    .append('Please, fill the ' + $selector.attr('name')).parent().addClass('has-warning has-feedback');
+
+            }
+            function displayErrorMessage(element) {
+                $('#helpBlock.tpl').clone().removeClass('tpl').insertAfter(element).
+                append('Unable to reach the server with this ' + element.attr('name').split()).parent()
+                    .addClass('has-error has-feedback');
+            }
+            function removeErrorMessage(element) {
+                if (element.hasClass('has-error')) {
+                   element.removeClass('has-error has-feedback');
+                   element.find('#helpBlock').remove();
+                }
+                if (element.hasClass('has-warning')) {
+                   element.removeClass('has-warning has-feedback');
+                   element.find('#helpBlock1').remove();
+                }
+            }
+            function cloningDestinationServer() {
+                var $selector = $('.destination-server.tpl').clone().removeClass('tpl');
+                if ($('body').find('.destination-server').hasClass('destination-server-already-exists')) {
+                        $selector.insertAfter($('.destination-server-already-exists:last'));
+                } else {
+                        $selector.insertBefore('.destination-server.tpl');
+                }
+               reIndex();
+
+            }
+            function reIndex() {
+                $('.destination-server:not(.tpl)').each(function(i) {
+                    $(this).find('h4').text("{% trans 'Destination server ' %}"+ (i+1));
+                    $(this).find('.server-ip').attr({'name': 'ip' + (i+1), 'required': 'required'});
+                    $(this).find('.server-username').attr({'name': 'username' + (i+1), 'required': 'required'});
+                    $(this).find('.server-password').attr({'name': 'password' + (i+1), 'required': 'required'});
+                });
+            }
+            function check_db_server_form () {
+                var endpoint;
+                {#endpoint = "{% url 'dbbackup:test_db_connection' %}";#}
+                param = {
+                'hostname': $hostname.val(),
+                'db_username': $db_username.val(),
+                'db_password': $db_password.val(),
+                'db_type': $db_type.val(),
+                };
+
+                /* Open a modal for an unpredictible delay time.*/
+
+                $('#modal-test-db-server').modal
+                (
+                    {backdrop: 'static'}
+                );
+
+                /* Checking input data before respond */
+
+                if ($db_type.val()!=='' && $db_type.val()!== 'MongoDB'){
+                    $error_fields = $('.job-config-form').find('.has-feedback').toArray();
+                    $.each($error_fields, function (i, el) {
+                        removeErrorMessage($(el));
+                    });
+                    $('#helpBlock1.tpl').clone().removeClass('tpl').insertAfter($db_type).
+                    append($db_type.val() + ' is not yet taken in consideration').parent()
+                        .addClass('has-warning has-feedback');
+                    $('#modal-test-db-server').modal('hide');
+                    return false;
+                }
+
+                if ($hostname.val() !== '' && $db_type.val() !== '') {
+                    $.getJSON(endpoint, param, function (data, jqXHR, status) {
+                        if (data.success) {
+                            $error_fields = $('.job-config-form').find('.has-feedback').toArray();
+                            $.each($error_fields, function (i, el) {
+                                removeErrorMessage($(el));
+                            });
+                            $('body').find('.btn-save').removeClass('tpl');
+                            $('body').find('.test-dest-servers').addClass('tpl');
+                            $('#modal-test-db-server').modal('hide');
+                            return true;
+                        } else {
+                            if ($db_username.val() !== '' && $db_password.val() !== '') {
+                                $error_fields = $('.job-config-form').find('.has-feedback').toArray();
+                                $.each($error_fields, function (i, el) {
+                                    removeErrorMessage($(el));
+                                });
+                                $.each([$hostname, $db_username, $db_password, $db_type], function (index, element) {
+                                    displayErrorMessage(element);
+                                });
+                                $('#modal-test-db-server').modal('hide');
+                                return false;
+                            }
+                            if ($db_username.val() !== '') {
+                                $error_fields = $('.job-config-form').find('.has-feedback').toArray();
+                                $.each($error_fields, function (i, el) {
+                                    removeErrorMessage($(el));
+                                });
+                                $.each([$hostname, $db_username, $db_type], function (index, element) {
+                                    displayErrorMessage(element);
+                                });
+                                $('#modal-test-db-server').modal('hide');
+                                return false;
+                            }
+                            if ($db_password.val() !== '') {
+                                $error_fields = $('.job-config-form').find('.has-feedback').toArray();
+                                $.each($error_fields, function (i, el) {
+                                    removeErrorMessage($(el));
+                                });
+                                $.each([$hostname, $db_password, $db_type], function (index, element) {
+                                    displayErrorMessage(element);
+                                });
+                                $('#modal-test-db-server').modal('hide');
+                                return false;
+                            }
+                            $error_fields = $('.job-config-form').find('.has-feedback').toArray();
+                            $.each($error_fields, function (i, el) {
+                                removeErrorMessage($(el));
+                            });
+                            $.each([$hostname, $db_type], function (index, element) {
+                                displayErrorMessage(element);
+                            });
+                            $('#modal-test-db-server').modal('hide');
+                            return false;
+                        }
+                    });
+                }
+                if ($hostname.val() === '') {
+                    if (!isHostnameHandlerSet) {
+                        $error_fields = $('.job-config-form').find('.has-feedback').toArray();
+                        $.each($error_fields, function (i, el) {
+                            removeErrorMessage($(el));
+                        });
+                        handler($hostname);
+                        isHostnameHandlerSet = true;
+                    }
+                    $('#modal-test-db-server').modal('hide');
+                    return false;
+                }
+                if ($db_type.val() === '') {
+                    if (!isDBTypeHandlerSet) {
+                        $error_fields = $('.job-config-form').find('.has-feedback').toArray();
+                        $.each($error_fields, function (i, el) {
+                            removeErrorMessage($(el));
+                        });
+                        handler($db_type);
+                        isDBTypeHandlerSet = true;
+                    }
+                    $('#modal-test-db-server').modal('hide');
+                    return false;
+                }
+
+            }
+            $('.second-section-form').removeClass('tpl').insertAfter('.field-run_every');
+
+
+        })
+    </script>
+{% endblock %}

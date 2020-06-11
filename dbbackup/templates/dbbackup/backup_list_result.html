@@ -16,7 +16,7 @@
                     <li class="ik-li list-group-item {{ obj.status }}" id="{{ obj.id }}" data-id="{{ obj.id }}" style="border: none;">
                         <div class="event">
                             <div class="subtle-shade event-detail" style="height: 140px;">
-                                <div class="event-icon pull-left" style="inherit;">
+                                <div class="event-icon pull-left" style="height: inherit;">
                                     <img src="{% static 'dbbackup/img/isometric-cloud-computing-concept-represented-by-a-server-with-a-vector-id969567772.jpg' %}" />
                                 </div>
                                 <div class="event-content" style="height: inherit;">
@@ -140,81 +140,3 @@
         {% endif %}
     </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{##}
-{#<div class="event-content">#}
-{##}
-{#                                <div>#}
-{#                                    <b href="javascript;" class="col-sm-6 row" style="">{% trans 'Start time' %}</b>#}
-{#                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0; color: mediumblue; font-weight: bolder">{{ obj.start_time }}</div>#}
-{#                                    <div class="clearfix"></div>#}
-{#                                </div>#}
-{#                                <div>#}
-{#                                    <b href="javascript;" class="col-sm-6 row" style="">{% trans 'Hostname' %}</b>#}
-{#                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0; color: #34495e;">{{ obj.job_config.hostname }}</div>#}
-{#                                    <div class="clearfix"></div>#}
-{#                                </div>#}
-{#                                <div>#}
-{#                                    <b href="javascript;" class="col-sm-6 row" style="">{% trans 'Database type' %}</b>#}
-{#                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0; color: #4c0d12;">{{ obj.job_config.db_type }}</div>#}
-{#                                    <div class="clearfix"></div>#}
-{#                                </div>#}
-{#                                <div>#}
-{#                                    <b href="javascript;" class="col-sm-6 row" style="">{% trans 'Database name' %}</b>#}
-{#                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0;">{{ obj.job_config.db_name }}</div>#}
-{#                                    <div class="clearfix"></div>#}
-{#                                </div>#}
-{#                                <div>#}
-{#                                    <b href="javascript;" class="col-sm-6 row" style="">{% trans 'Run every' %}</b>#}
-{#                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0;">{{ obj.job_config.run_every }} hours</div>#}
-{#                                    <div class="clearfix"></div>#}
-{#                                </div>#}
-{#                                <div>#}
-{#                                    <b href="javascript;" class="col-sm-6 row" style="">{% trans 'Status' %}</b>#}
-{#                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0; color: #cd8f17; font-weight: bolder">{{ obj.status}}</div>#}
-{#                                    <div class="clearfix"></div>#}
-{#                                </div>#}
-{#                                <div>#}
-{#                                    <b href="javascript;" class="col-sm-6 row" style="">{% trans 'Relative file path' %}</b>#}
-{#                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0; color: #556322; font-weight: bolder">{{ obj.relative_file_path }}</div>#}
-{#                                    <div class="clearfix"></div>#}
-{#                                </div>#}
-{#                                <div>#}
-{#                                    <b href="javascript;" class="col-sm-6 row" style="">{% trans 'File size' %}</b>#}
-{#                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0; color: #cd086a; font-weight: bolder">{{ obj.file_size }}</div>#}
-{#                                    <div class="clearfix"></div>#}
-{#                                </div>#}
-{#                                {% for destination_server in obj.job_config.destination_server_list %}#}
-{#                                    <div>#}
-{#                                        <b href="javascript;" class="col-sm-6 row" style="">{% trans 'Destination server' %}{{ forloop.counter }}</b>#}
-{#                                        <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding-right: 0;">{{ destination_server }}</div>#}
-{#                                        <div class="clearfix"></div>#}
-{#                                    </div>#}
-{#                                {% endfor %}#}
-{#                            </div>#}
-{#                            <div class="clearfix"></div>#}
-{#                        </div>#}
-{#                        <div class="clearfix"></div>#}

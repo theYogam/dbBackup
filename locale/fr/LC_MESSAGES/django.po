@@ -1,0 +1,375 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-09-28 09:35+0100\n"
+"PO-Revision-Date: 2019-09-28 09:35+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.6\n"
+
+#: conf/settings.py:154
+msgid "English"
+msgstr "Anglais"
+
+#: conf/settings.py:155
+msgid "French"
+msgstr "Français"
+
+#: dbbackup/models.py:32 dbbackup/templates/dbbackup/change_job_config.html:57
+#: dbbackup/templates/dbbackup/change_job_config.html:77
+msgid "Server IP"
+msgstr "Add. IP du serveur"
+
+#: dbbackup/models.py:34
+msgid "Server username"
+msgstr "Username Serveur"
+
+#: dbbackup/models.py:36
+msgid "Server password"
+msgstr "Mot de passe Serveur"
+
+#: dbbackup/models.py:46
+msgid "Hostname"
+msgstr "Hôte"
+
+#: dbbackup/models.py:48 dbbackup/views.py:56
+msgid "Database type"
+msgstr "Type de BD"
+
+#: dbbackup/models.py:49
+msgid "Database name"
+msgstr "Nom BD"
+
+#: dbbackup/models.py:50
+msgid "Database username"
+msgstr "Username BD"
+
+#: dbbackup/models.py:52
+msgid "Database password"
+msgstr "Mot de passe BD"
+
+#: dbbackup/models.py:53
+msgid "Run every"
+msgstr "Executer tous les"
+
+#: dbbackup/models.py:66
+msgid "Status"
+msgstr "Status"
+
+#: dbbackup/models.py:67
+msgid "Start time"
+msgstr "Heure de début"
+
+#: dbbackup/models.py:68
+msgid "Backup relative file path"
+msgstr "Chemin du fichier Backup"
+
+#: dbbackup/models.py:69
+msgid "Backup file size"
+msgstr "Taille du backup"
+
+#: dbbackup/models.py:70
+msgid "Error messages"
+msgstr "Messages d'erreur"
+
+#: dbbackup/views.py:57
+msgid "Date created"
+msgstr "Date de création"
+
+#: dbbackup/templates/core/app_base_admin.html:10
+msgid "Job configs"
+msgstr ""
+
+#: dbbackup/templates/core/app_base_admin.html:14
+msgid "Backups"
+msgstr ""
+
+#: dbbackup/templates/dbbackup/backup_list_result.html:24
+#: dbbackup/templates/dbbackup/backup_list_result.html:78
+#: dbbackup/templates/dbbackup/change_job_config.html:147
+#: dbbackup/templates/dbbackup/job_config_list_result.html:16
+msgid " on "
+msgstr " le "
+
+#: dbbackup/templates/dbbackup/backup_list_result.html:30
+#: dbbackup/templates/dbbackup/backup_list_result.html:84
+#: dbbackup/templates/dbbackup/change_job_config.html:152
+#: dbbackup/templates/dbbackup/job_config_list_result.html:22
+msgid "Database: "
+msgstr "Base de donnée: "
+
+#: dbbackup/templates/dbbackup/backup_list_result.html:43
+#: dbbackup/templates/dbbackup/backup_list_result.html:97
+#: dbbackup/templates/dbbackup/change_job_config.html:158
+msgid "destination server(s)"
+msgstr "server de destination(s)"
+
+#: dbbackup/templates/dbbackup/backup_list_result.html:56
+#: dbbackup/templates/dbbackup/backup_list_result.html:110
+#: dbbackup/templates/dbbackup/job_config_list_result.html:61
+msgid "Deactivate"
+msgstr "Désactiver"
+
+#: dbbackup/templates/dbbackup/backup_list_result.html:58
+#: dbbackup/templates/dbbackup/backup_list_result.html:112
+#: dbbackup/templates/dbbackup/job_config_list_result.html:63
+msgid "Activate"
+msgstr "Activer"
+
+#: dbbackup/templates/dbbackup/backup_list_result.html:61
+#: dbbackup/templates/dbbackup/backup_list_result.html:115
+#: dbbackup/templates/dbbackup/job_config_list_result.html:66
+msgid "Delete item"
+msgstr "Supprimer"
+
+#: dbbackup/templates/dbbackup/backup_list_result.html:136
+#: dbbackup/templates/dbbackup/job_config_list_result.html:86
+#, python-format
+msgid ""
+"\n"
+"                %(start)s – %(end)s of %(count)s results"
+msgstr ""
+"\n"
+"                %(start)s – %(end)s de %(count)s résultats"
+
+#: dbbackup/templates/dbbackup/backup_list_result.html:139
+#: dbbackup/templates/dbbackup/job_config_list_result.html:89
+#, python-format
+msgid "%(count)s results"
+msgstr "%(count)s résultats"
+
+#: dbbackup/templates/dbbackup/change_job_config.html:48
+msgid "Job Configuration"
+msgstr "Configuration du Job"
+
+#: dbbackup/templates/dbbackup/change_job_config.html:61
+#: dbbackup/templates/dbbackup/change_job_config.html:81
+msgid "Username"
+msgstr ""
+
+#: dbbackup/templates/dbbackup/change_job_config.html:65
+#: dbbackup/templates/dbbackup/change_job_config.html:85
+msgid "Password"
+msgstr ""
+
+#: dbbackup/templates/dbbackup/change_job_config.html:92
+msgid "Add destination server"
+msgstr "Ajouter un serveur de dest"
+
+#: dbbackup/templates/dbbackup/change_job_config.html:95
+msgid "Check"
+msgstr "Vérifier"
+
+#: dbbackup/templates/dbbackup/change_job_config.html:99
+msgid "Save"
+msgstr "Enregistrer"
+
+#: dbbackup/templates/dbbackup/change_job_config.html:128
+msgid "Most recent backups"
+msgstr "Backups les plus récents"
+
+#: dbbackup/templates/dbbackup/change_job_config.html:132
+msgid "Show more"
+msgstr "Voir plus"
+
+#: dbbackup/templates/dbbackup/change_job_config.html:370
+msgid "Destination server "
+msgstr "Serveur de dest. "
+
+#: dbbackup/templates/dbbackup/home.html:5
+#: dbbackup/templates/dbbackup/home.html:12
+#: dbbackup/templates/dbbackup/home.html:15
+msgid "Multiply the storage locations of your database cluster"
+msgstr "Multipliez les zones de stockage de votre cluster de base de données"
+
+#: dbbackup/templates/dbbackup/home.html:13
+#: dbbackup/templates/dbbackup/home.html:17
+msgid ""
+"DBBACKUP ensures the perinity of your databases, by storing them on multiple "
+"remote servers."
+msgstr ""
+"DBBACKUP assure la pérennité de vos bases de données, en les stockant sur "
+"plusieurs serveurs distants."
+
+#: dbbackup/templates/dbbackup/home.html:35
+msgid "Automating and scheduling backups from your cluster of databases"
+msgstr ""
+"Automatisation et planification des sauvegardes à partir de votre cluster de "
+"bases de données"
+
+#: dbbackup/templates/dbbackup/home.html:39
+msgid ""
+"\n"
+"                            Holding a big cluster of databases is not easy "
+"to manage safely.\n"
+"                            DBBackup is the app that prevents your users' "
+"data from leaks,\n"
+"                            deletion and corruption by storing them into "
+"many remote servers.\n"
+"                        "
+msgstr ""
+"\n"
+"                            Il n'est pas facile de gérer un énorme cluster "
+"de bases de données en toute sécurité.\n"
+"                            DBBackup est l'application qui vous empêche les "
+"fuites de données de vos utilisateurs,\n"
+"                            la suppression et la corruption en les stockant "
+"sur de nombreux serveurs distants.\n"
+"                        "
+
+#: dbbackup/templates/dbbackup/home.html:44
+msgid "Don't wait things to go wrong !!!"
+msgstr "N'attendez plus !!!"
+
+#: dbbackup/templates/dbbackup/home.html:46
+#: dbbackup/templates/dbbackup/home.html:331
+msgid "Backup now"
+msgstr "Backup maintenant"
+
+#: dbbackup/templates/dbbackup/home.html:64
+msgid "Support for a multiple types of Databases"
+msgstr "Prise en charge de plusieurs types de Base de données"
+
+#: dbbackup/templates/dbbackup/home.html:88
+msgid "Get started"
+msgstr "Lancez-vous"
+
+#: dbbackup/templates/dbbackup/home.html:181
+msgid "Available on every devices"
+msgstr "Accessible sur tous les terminaux"
+
+#: dbbackup/templates/dbbackup/home.html:183
+msgid ""
+"No matter which device you're currently using, DBBackup allow you to backup "
+"your databases in realtime on every terminals."
+msgstr ""
+"Peu importe l'appareil que vous utilisez présentement, DBBackup vous permet "
+"de backup vos bases de données en temps réel sur tous types de terminaux."
+
+#: dbbackup/templates/dbbackup/home.html:230
+msgid "On PC"
+msgstr "Sur PC"
+
+#: dbbackup/templates/dbbackup/home.html:232
+#: dbbackup/templates/dbbackup/home.html:255
+#: dbbackup/templates/dbbackup/home.html:278
+msgid ""
+"\n"
+"                                Yes, your platform accepts online payment "
+"for school fees or everything else,\n"
+"                                and you collect money on your bank account. "
+"Once parents can follow their child online,\n"
+"                                they can see whatever is due and pay by "
+"themselves using whatever Mobile Money wallet or\n"
+"                                bank account. You have detailed information "
+"about those transactions and status\n"
+"                                of your online wallet.\n"
+"                            "
+msgstr ""
+"\n"
+"                                Lorem Ipsum is simply dummy text of the "
+"printing and typesetting industry. \n"
+"\t\t\t\tLorem Ipsum has been the industry's standard dummy text ever since "
+"the 1500s,\n"
+"\t\t\t\t when an unknown printer took a galley of type and scrambled it to "
+"make a type specimen book.\n"
+"\t\t\t\t It has survived not only five centuries, but also the leap into "
+"electronic typesetting, remaining essentially unchanged.\n"
+"\t\t\t\t It was popularised in the 1960s with the release of Letraset sheets "
+"containing Lorem Ipsum passages, \n"
+"\t\t\t\tand more recently with desktop publishing software like Aldus "
+"PageMaker including versions of Lorem Ipsum.\n"
+"                            "
+
+#: dbbackup/templates/dbbackup/home.html:253
+msgid "On tablet"
+msgstr "Sur tablette"
+
+#: dbbackup/templates/dbbackup/home.html:276
+msgid "On phone"
+msgstr "Sur téléphone"
+
+#: dbbackup/templates/dbbackup/home.html:293
+msgid "You're in good company"
+msgstr "Vous êtes sur une excellente entreprise"
+
+#: dbbackup/templates/dbbackup/home.html:294
+msgid ""
+"\n"
+"                We have been on the field for many years, building and "
+"maintaining great cloud apps that  address\n"
+"                business-critical issues for some major IT companies in "
+"Cameroon.\n"
+"                Join those organizations with confidence.\n"
+"            "
+msgstr ""
+"\n"
+"                Nous sommes sur le terrain depuis bons nombres d'années, "
+"construisant et maintenant de grandes applications cloud qui\n"
+"\t\trépodent aux problèmes cruciaux dont souffrent certaines grandes des "
+"entreprises IT du Cameroun.\n"
+"                Rejoignez ces entrepises avec assurance.\n"
+"            "
+
+#: dbbackup/templates/dbbackup/home.html:328
+msgid ""
+"\n"
+"            Configure jobs on <strong>DBBackup Weblets</strong> now and wait "
+"your backup archives to be created and stored on remote servers .\n"
+"        "
+msgstr ""
+"\n"
+"            Configurez des tâches sur <strong>DBBackup Weblets</strong> "
+"maintenant et patientez que vos archives de backups soient générées et "
+"sauvegardées\n"
+"\t\tsur des serveurs distants .\n"
+"        "
+
+#: dbbackup/templates/dbbackup/home.html:340
+msgid "All rights reserved."
+msgstr "Tous les droits reservés."
+
+#: dbbackup/templates/dbbackup/home.html:342
+msgid "Legal mentions"
+msgstr "Mentions légales"
+
+#: dbbackup/templates/dbbackup/home.html:348
+msgid "Blog"
+msgstr "Blog"
+
+#: dbbackup/templates/dbbackup/home.html:349
+msgid "Support"
+msgstr "Support"
+
+#: dbbackup/templates/dbbackup/home.html:350
+msgid "Terms & conditions"
+msgstr "Termes & conditions"
+
+#: dbbackup/templates/dbbackup/home.html:351
+msgid "About ikwen"
+msgstr "À propos d'ikwen"
+
+#: dbbackup/templates/dbbackup/job_config_list_result.html:34
+msgid "Run every: "
+msgstr "Exécuter tous les: "
+
+#: dbbackup/templates/dbbackup/job_config_list_result.html:40
+msgid "Destination servers: "
+msgstr "Serveurs de dest.: "
+
+#~ msgid "See details"
+#~ msgstr "Voir détails"
+
+#~ msgid "Back-up and archiving"
+#~ msgstr "Back-up et archivage"

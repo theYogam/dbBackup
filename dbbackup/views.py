@@ -138,6 +138,7 @@ class ChangeJobConfig(ChangeObjectBase):
         if kwargs.__len__() > 0:
             job_config_id = kwargs['object_id']
             most_recent_backup = Backup.objects.filter(job_config_id=job_config_id).order_by('start_time')[:4]
+            context['job_config_id'] = job_config_id
             context['destination_server_list'] = JobConfig.objects.get(id=job_config_id).destination_server_list
             context['most_recent_backup'] = most_recent_backup
         else:
