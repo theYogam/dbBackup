@@ -1,5 +1,7 @@
+# Forked and reviewed by Silatchom SIAKA on 10, Wed June 2020
 import os
 import logging
+import socket
 import subprocess
 from datetime import datetime
 
@@ -25,14 +27,6 @@ RUNNING = 'Running'
 PENDING = 'Pending'
 FAILED = 'Failed'
 SUCCESS = 'Success'
-
-
-# sys.path.append('/home/roddy/Dropbox/PycharmProjects/dbbackup/dbbackup/')
-# os.chdir('/home/roddy/Dropbox/PycharmProjects/dbbackup/dbbackup/')
-# # os.environ['DJANGO_SETTINGS_MODULE'] = '/home/roddy/Dropbox/PycharmProjects/dbbackup/conf/settings.py'
-# '/home/roddy/Dropbox/PycharmProjects/dbbackup/conf/settings.py'
-
-# subprocess.call(['export PYTHONPATH=/usr/bin/python:$PYTHONPATH'])
 
 
 def dump_database(hostname, db_name, db_type, db_username, db_password, dump_output_path):
@@ -78,6 +72,9 @@ def send_file_thru_sftp(backup, destination_server_list, source_file_path):
     sftp_return_code = 0
     size_remote_file = 0
     remote_file_path = ''
+    host_name = socket.gethostname()
+    host_ip = socket.gethostbyname(host_name)
+
     for destination_server in destination_server_list:
 
         try:
@@ -85,11 +82,11 @@ def send_file_thru_sftp(backup, destination_server_list, source_file_path):
             ssh_transport.connect(username=destination_server.username, password=destination_server.password)
             sftp_session = paramiko.SFTPClient.from_transport(ssh_transport)
 
-            remote_file_path = 'IKWEN_DB_BACKUPS/BACKUP' + backup.created_on.strftime('_%Y-%m-%d_%H-%M-%S') \
+            remote_file_path = 'IKWEN_DB_BACKUPS/' + host_ip + backup.created_on.strftime('_%Y-%m-%d_%H-%M-%S') \
                                + '/' + source_file_path.split('/')[-1]
             if not os.path.exists('IKWEN_DB_BACKUPS'):
                 sftp_session.mkdir('IKWEN_DB_BACKUPS')
-            sftp_session.mkdir('IKWEN_DB_BACKUPS/BACKUP' + backup.created_on.strftime('_%Y-%m-%d_%H-%M-%S'))
+            sftp_session.mkdir('IKWEN_DB_BACKUPS/' + host_ip + backup.created_on.strftime('_%Y-%m-%d_%H-%M-%S'))
 
             sftp_session.put(source_file_path, remote_file_path, confirm=True)
             size_remote_file = os.path.getsize('/' + os.getcwd().split('/')[1] + '/' + os.getcwd().split('/')[2] + '/'
@@ -158,10 +155,6 @@ def do_backup(job_config):
         logger.error(message, exc_info=True)
         backup.save()
         return 0
-
-    # output_folder = final_output_folder + backup.created_on.strftime('_%Y-%m-%d_%H-%M-%s')
-    # if not os.path.exists(output_folder):
-    #     os.mkdir(output_folder)
 
     backup_relative_file_path, size_backup_file, error_message, sftp_return_code = send_file_thru_sftp\
         (backup, destination_server_list, dump_archive_file)
