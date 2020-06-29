@@ -17,12 +17,12 @@
                         <div class="event">
                             <div class="subtle-shade event-detail" style="height: 140px;">
                                 <div class="event-icon pull-left" style="height: inherit;">
-                                    <img src="{% static 'dbbackup/img/isometric-cloud-computing-concept-represented-by-a-server-with-a-vector-id969567772.jpg' %}" />
+                                    <img src="{% static 'dbbackup/img/backup-data-bg2.jpg' %}" />
                                 </div>
                                 <div class="event-content" style="height: inherit;">
                                     <div style="margin-bottom: 5px">
                                         <div class="col-md-8 row"><b>{{ obj.job_config.db_type }} </b> {% trans ' on ' %} {{ obj.job_config.hostname }}</div>
-                                        <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding: 0;"><time>{{ obj.start_time }}</time></div>
+                                        <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding: 0;"><time>{{ obj.created_on }}</time></div>
                                         <div class="clearfix"></div>
                                     </div>
                                     <div style="margin-bottom: 5px">
@@ -70,13 +70,13 @@
                 <li class="ik-li list-group-item {{ obj.status }}" id="{{ obj.id }}" data-id="{{ obj.id }}" style="border: none;">
                     <div class="event">
                         <div class="subtle-shade event-detail" style="height: 140px;">
-                            <div class="event-icon pull-left" style="inherit">
-                                <img src="{% static 'dbbackup/img/isometric-cloud-computing-concept-represented-by-a-server-with-a-vector-id969567772.jpg' %}" />
+                            <div class="event-icon pull-left" style="height: inherit">
+                                <img src="{% static 'dbbackup/img/backup-data-bg2.jpg' %}" />
                             </div>
                             <div class="event-content" style="height: inherit;">
                                 <div style="margin-bottom: 5px">
                                     <div class="col-md-8 row"><b>{{ obj.job_config.db_type }} </b> {% trans ' on ' %} {{ obj.job_config.hostname }}</div>
-                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding: 0;"><time>{{ obj.start_time }}</time></div>
+                                    <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding: 0;"><time>{{ obj.created_on }}</time></div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div style="margin-bottom: 5px">

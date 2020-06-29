@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HTML><HEAD>
+<META content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+<TITLE>PEAK - The Python Enterprise Application Kit</TITLE>
+<STYLE type=text/css>
+<!--
+body {  font-family: Georgia, "Times New Roman", Times, serif}
+h2 {color: #333333; font-weight: bold; font-family: Arial; }
+.slugTable {  border-top: #666666 solid 1px }
+.slugText { color: #333333;
+            font-weight: bold;
+            font-family: Arial; }
+.teaser {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 75%}
+
+
+-->
+</STYLE>
+<!--  -->
+</HEAD>
+<BODY bgColor=#ffffff text=#000000><TABLE border=0 cellPadding=0 cellSpacing=0 width="100%">
+<TBODY>
+<TR>
+<TD align=left><SPAN><IMG 
+      alt="PEAK: Python Enterprise Application Kit" border=0 height=137 
+      src="Images/peak3.gif" width=391  cd:pos="5"></SPAN></TD>
+<TD align=right><SPAN><IMG 
+      alt="The road less traveled is the way to the top." border=0 height=149 
+      src="Images/LessTraveled.gif" width=254  
+cd:pos="5"></SPAN></TD></TR></TBODY></TABLE><BR>
+<TABLE border=0 cellPadding=0 cellSpacing=0 width="100%">
+<TBODY>
+  <TR>
+<TD width=25 rowspan=2>&nbsp;</TD>
+<td></td>
+<TD width=25 rowspan=2>&nbsp;</TD>
+<TD rowspan=2>
+
+<TABLE border=0 cellPadding=10 cellSpacing=0><TBODY><TR><TD>
+
+ 
+<H2>Monday, June 25, 2007</H2>
+<p>Wondering what's been going on with PEAK lately?&nbsp; Check out this <a href="http://www.eby-sarna.com/pipermail/peak/2007-June/002710.html">status report</a>.</p>
+<p>&nbsp;</p>
+<HR noShade>
+ 
+<H2>Wednesday, May 24, 2006</H2>
+<p>The breakup of PEAK into separate EasyInstall-able packages has finally begun!&nbsp; So far this week, <a href="http://python.org/pypi/BytecodeAssembler">BytecodeAssembler</a>, <a href="http://python.org/pypi/Importing">Importing</a>, and <a href="http://python.org/pypi/DecoratorTools">DecoratorTools</a> have all been spun off into their own PyPI listings as separately-installable packages.&nbsp; I've also posted a <a href="http://www.eby-sarna.com/pipermail/peak/2006-May/002535.html">new roadmap</a> to the mailing list, which describes the work to be done on PEAK-Rules and various other planned package spinoffs.</p>
+<HR noShade>
+ 
+<H2>Friday, September 16, 2005</H2>
+<p>Wow, I can't believe I've neglected to update this page for almost a year now.&nbsp; It's not because development hasn't been taking place, though.&nbsp; For example, I've been doing a pretty major project that roughly corresponds to Java's <a href="http://www.osgi.org/">OSGi</a> crossed with Perl's CPAN shell:</p>
+<ul>
+<li><a href="http://peak.telecommunity.com/DevCenter/setuptools">setuptools</a> - for packaging Python projects as "eggs"
+</li>
+<li><a href="http://peak.telecommunity.com/DevCenter/EasyInstall">EasyInstall</a> (bundled with setuptools) - for finding, downloading, and installing projects from <a href="http://www.python.org/pypi">PyPI</a> (aka the <a href="http://cheeseshop.python.org/pypi">Cheese Shop</a>)
+</li>
+<li><a href="http://peak.telecommunity.com/DevCenter/PkgResources">pkg_resources</a> (bundled with setuptools) - a runtime package management, resource extraction, and service discovery system akin to OSGi
+</li>
+</ul>
+<p>This project has in fact consumed most of my off-hours this year, so I've done next to nothing on other parts of PEAK, except that a few months ago I updated the data manager interface to inch it a little closer to what peak.schema will someday look like, whenever I get around to working on it again.&nbsp; There is still so much that needs doing with setuptools just to catch it up to <a href="http://docs.rubygems.org/">Ruby's Gems</a> as far as package management.&nbsp; Another big project still to come is the breakup of PEAK into separately-distributed eggs, following our recently completed move to Subversion for source control.</p>
+<p>Speaking of which, if you came here from <a href="http://www-128.ibm.com/developerworks/library/l-cppeak2/">David Mertz' new article on generic functions</a> and are looking for the implementation, here's how to install it:</p>
+<ol>
+<li>Download <a href="http://peak.telecommunity.com/dist/ez_setup.py">ez_setup.py</a>
+, and then run:
+</li>
+<li><tt>ez_setup.py -Zf <a href="http://peak.telecommunity.com/snapshots/">http://peak.telecommunity.com/snapshots/</a> RuleDispatch</tt>
+</li>
+</ol>
+<p>This will install the latest version of the RuleDispatch generic function package along with <a href="http://peak.telecommunity.com/PyProtocols.html">PyProtocols</a> and setuptools.&nbsp; I'll probably make an official release to PyPI this weekend, but in the meantime this will let you get started.&nbsp; (Don't try to download from CVS; we've <a href="Meta/AnonymousSVNAccess.html">moved to Subversion</a>!)</p>
+<p>The setuptools project is likely to remain my primary focus for a while, though.&nbsp; In addition to being a key "enterprise" feature for Python, and being something needed for my "day job" at <a href="http://www.osafoundation.org/">OSAF</a>, it's also a key feature for PEAK's future.&nbsp; PEAK is as large as it is only because it has historically been difficult to manage dependencies between separately-distributed Python packages.&nbsp; PEAK contains dozens of useful, narrowly-focused tools and mini-frameworks that would be considerably more attractive as standalone distributions.&nbsp; The setuptools project finally makes it practical to distribute them separately.</p>
+<HR noShade>
+ 
+<H2>Wednesday, October 27, 2004</H2>
+<p>An early version of peak.web is <a href="http://www.eby-sarna.com/pipermail/peak/2004-October/001877.html">now available</a>, as I <a href="http://www.eby-sarna.com/pipermail/peak/2004-October/001810.html">previously promised</a>.&nbsp; At this point, it's more of a proof-of-concept than a working web framework, since it only includes features aimed at creating static sites and dynamic read-only sites (e.g. from databases).&nbsp; In other words, no authentication and no forms handling.&nbsp; For the moment, however, it's a very easy way to create pages to go with your objects.&nbsp; Searching or modifying objects, well, that's a bit harder.</p>
+<p>I also now have a <a href="http://dirtsimple.org/">personal blog at dirtSimple.org</a>, which will sometimes touch on PEAK-related topics.&nbsp; The blog, combined with the work I've been doing for my wife's <a href="http://www.after12am.com/shop/">lingerie and adult toy store</a> (not safe for work!), has been taking up a lot of my time lately.&nbsp; (And no, the store's website isn't written in peak.web, it's using an open source PHP package -- why do you think I've been so motivated to get peak.web working?&nbsp; PHP the language isn't so much the issue, as it is that adding components to the site equals applying diffs to various segments of it.&nbsp; Ugh.&nbsp; peak.web will be <strong>much</strong> more modular; I guarantee it.)</p>
+<HR noShade>
+ 
+<H2>Tuesday, July 6, 2004</H2>
+<p>The <a href="http://www.eby-sarna.com/pipermail/peak/2004-July/001562.html">first release candidate for PyProtocols 0.9.3</a>&nbsp;is now available.&nbsp; This release mainly improves compatibility and API symmetry between PyProtocols and Zope, such as the ability to use IFoo(bar) as a shortcut for adapt(bar,IFoo), and the ability to use adapter factories that take only one argument.</p>
+<p>I've tried to make it as backwards-compatible with 0.9.2 as possible, but depending on how deeply you've used certain obscure features, you may notice changes.&nbsp; So make sure that you read <a href="http://peak.telecommunity.com/protocol_api/UPGRADING.txt.html">UPGRADING.txt</a> and <a href="http://peak.telecommunity.com/protocol_api/CHANGES.txt.html">CHANGES.txt</a> before you upgrade any production code to 0.9.3.</p>
+<HR noShade>
+ 
+<H2>Wednesday, February 18, 2004</H2>
+<p><a href="http://www.eby-sarna.com/pipermail/peak/2004-February/001253.html">PEAK 0.5a3 is finally out</a>.&nbsp; There's no unifying theme to this release, unless "it's been too long since the last release" counts. Lots of new frameworks and other cool features.&nbsp; But then, if you've actually been using PEAK, chances are good you've been following the <a href="http://cvs.eby-sarna.com/PEAK/">CVS version</a> and the <a href="http://www.eby-sarna.com/pipermail/peak/">mailing list</a>, and so you've already been using all the new stuff for a while.</p>
+<p>So, I'm not sure what else I should say here.&nbsp; I still don't want to <a href="http://www.eby-sarna.com/pipermail/peak/2003-July/000601.html">excessively promote PEAK</a> to people who aren't willing to do a little digging and experimenting, so I guess I should shut up now.</p>
+<HR noShade>
+ 
+<H2>Friday, December 5, 2003</H2>
+<a href="http://peak.telecommunity.com/PyProtocols.html">PyProtocols 0.9.2</a> is out; I goofed and missed adding a unit test for the new<?xml:namespace prefix = cd /?> <tt>protocols.Variation</tt> class.&nbsp; As a result, it was unusably broken.&nbsp; Thanks to Radek Kanovsky for <a href="http://www.eby-sarna.com/pipermail/peak/2003-December/000960.html">pointing this out</a>.&nbsp; I guess this just shows what happens when you don't <a href="http://www.artima.com/intv/testdriven.html">write the tests first</a>.<br /> <br />
+<HR noShade>
+ 
+<H2>Friday, November 28, 2003</H2>
+<p><?xml:namespace prefix = cd /?><a href="http://peak.telecommunity.com/PyProtocols.html">PyProtocols 0.9.1</a> is out.&nbsp; Highlights include fixed bugs, compatibility with the latest versions of Python, Zope, and Twisted, and lots of new convenience features for automatically or semi-automatically creating protocols and adapters.&nbsp; <a href="http://peak.telecommunity.com/protocol_api/CHANGES.txt.html">See the full list of changes</a>.</p>
+<p> Also, I recently completed the <a href="http://www.eby-sarna.com/pipermail/peak/2003-August/000697.html">pre-forking process manager I talked about in August</a>.&nbsp; And in the process, I added a new <a href="http://cvs.eby-sarna.com/PEAK/src/peak/running/process.py?rev=HEAD&amp;content-type=text/vnd.viewcvs-markup">mini-framework for managing signals and child processes</a>.&nbsp; With luck, I hope to get the rest of the <a href="http://peak.telecommunity.com/doc/TODO.txt.html">0.5a3 features</a> done before year-end.</p>
+<HR noShade>
+ 
+<H2>Wednesday, October 15, 2003</H2>
+<P>There's now a developer wiki available at <A href="http://peak.telecommunity.com/DevCenter/">http://peak.telecommunity.com/DevCenter/</A>.&nbsp; There are a few official documentation semi-drafts floating around there, plus some promising volunteer efforts and examples.&nbsp; Also, a mostly-complete set of IRC channel logs is available at <A href="http://peak.telecommunity.com/irc-logs/">http://peak.telecommunity.com/irc-logs/</A>, but keep in mind that most days logged consist mostly of "so-and-so came, so-and-so left", and other days are missing.&nbsp; The Twisted-based logbot seems susceptible to being bumped offline and never coming back.&nbsp; I keep meaning to ask for help with it on the Twisted mailing list, but never quite getting around to it.</P>
+<P>Work is in progress on developing a full-blown logical query language for PEAK.&nbsp; Actually, not so much a language as a Python API for creating query objects that can be either executed on objects directly (the way <TT>peak.model.queries</TT> does now) or translated to other query languages like SQL.&nbsp; The API's expressive power should be roughly equivalent to that of <A href="http://www.orm.net/queries.html">ConQuer</A>, a conceptual query language that's a superset of SQL in functionality, and much easier to use.&nbsp; I'm currently posting design notes to the mailing list, and posting <A href="http://peak.telecommunity.com/DevCenter/DatabaseReferences">links to useful papers</A>&nbsp;in the wiki. </P>
+<HR noShade>
+ 
+<H2>Saturday, June 28, 2003</H2>
+<P>There's now an IRC channel for discussing PEAK: <TT>#peak</TT> on <TT>irc.freenode.net</TT>.&nbsp; I'm not there that often, but there seem to be a few regulars there whenever I do drop by.</P>
+<P>The 0.5 alpha 2 release&nbsp;also came out this month, and I'm hard at work on alpha 3.&nbsp; Alpha 3 will include the beginnings of the <TT>peak.web</TT> framework, and the <TT>peak.security</TT> framework for rule-based access control is already in CVS.</P>
+<P>Last, but far from least, I've started work on an example application, "Bulletins", which will demonstrate how to use data managers, configuration, <TT>peak.running</TT>, and indeed most of PEAK's major subsystems.&nbsp; It is basically a web-based announcement system, a sort of very primitive blog.&nbsp; But its main purpose is to be a "shakedown cruise" for PEAK 0.5, to find out what, if anything, is missing from the framework for building complete applications.</P>
+<HR noShade>
+
+</TD>
+
+<TD width=25 rowspan=2>&nbsp;</TD>
+
+</TR></TBODY></TABLE>
+
+</TD></TR>
+
+<tr valign="top">
+<TD bgColor=#f0f0f0 vAlign=top width=200>
+
+<TABLE border=0 cellPadding=10 cellSpacing=0><TBODY><TR>
+
+<TD bgColor=#f0f0f0 vAlign=top width=180>
+     
+<H4><FONT face="Verdana, Arial, Helvetica, sans-serif"><I>documentation</I></FONT></H4>
+<ul class=teaser><p><A href="Articles/WhatisPEAK.html">What is PEAK?</A><BR><BR>
+
+<A href="http://peak.telecommunity.com/doc/">API&nbsp;Reference</A
+><A href="http://peak.telecommunity.com/doc/" target=_new title="Open link in new window"
+><IMG alt="[Link opens in new window]" border=0 height=15 src="Images/LinkInNewWindow.gif" width=24></A><BR><BR>
+
+<A href="http://peak.telecommunity.com/tut.pdf">Tutorial PDF</A> (draft)</A><BR><BR>
+
+<A href="PyProtocols.html">PyProtocols</A></p></ul>
+     
+<H4><FONT face="Verdana, Arial, Helvetica, sans-serif"><I>community</I></FONT></H4>
+<ul class=teaser><p><A href="http://www.eby-sarna.com/mailman/listinfo/PEAK/">Mailing List</A
+><A href="http://www.eby-sarna.com/mailman/listinfo/PEAK/" target=_new title="Open link in new window"
+><IMG alt="[Link opens in new window]" border=0 height=15 src="Images/LinkInNewWindow.gif" width=24></A><BR><BR>
+
+<A href="http://peak.telecommunity.com/DevCenter">DevCenter Wiki</A><BR><BR>
+
+<A href="Meta/IRCChannel.html">IRC Channel</A></p></ul>
+     
+<H4><FONT face="Verdana, Arial, Helvetica, sans-serif"><I>resources</I></FONT></H4>
+<ul class=teaser><p><A href="http://peak.telecommunity.com/">News</A><BR><BR>
+
+<A href="http://svn.eby-sarna.com/PEAK/">View SVN</A
+><A href="http://svn.eby-sarna.com/PEAK/" target=_new title="Open link in new window"
+><IMG alt="[Link opens in new window]" border=0 height=15 src="Images/LinkInNewWindow.gif" width=24></A><BR><BR>
+
+<A href="http://www.eby-sarna.com/pipermail/source-changes/">Revision History</A
+><A href="http://www.eby-sarna.com/pipermail/source-changes/" target=_new title="Open link in new window"
+><IMG alt="[Link opens in new window]" border=0 height=15 src="Images/LinkInNewWindow.gif" width=24></A></p></ul>
+     
+<H4><FONT face="Verdana, Arial, Helvetica, sans-serif"><I>download</I></FONT></H4>
+<ul class=teaser><p><A href="Meta/SourceandBinaryReleases.html">Current Releases</A><BR><BR>
+<A href="http://peak.telecommunity.com/doc/INSTALL.txt.html">Installation Info</A><BR><BR>
+<A href="Meta/AnonymousSVNAccess.html">Anonymous SVN</A>
+</p></ul>
+
+</TD>
+
+
+</TR></TBODY></TABLE>
+
+</TD></tr></TBODY></TABLE></BODY></HTML>

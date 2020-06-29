@@ -1,38 +1,43 @@
-{% extends "website/base.html" %}
-{#{% extends 'foulassi/home_saas.html' %}#}
+{% extends 'website/base.html' %}
 {% load i18n humanize static auth_tokens  %}
 {% block page_title %}
     <title>DBBACKUP - {% trans "Multiply the storage locations of your database cluster" %} </title>
 {% endblock %}
 
 {% block meta %}
-    {% include 'foulassi/snippets/color_and_icons.html' %}
-    <meta name="apple-mobile-web-app-title" content="Foulassi" />
+    {% include 'dbbackup/snippets/color_and_icons.html' %}
+    <meta name="apple-mobile-web-app-title" content="DBBACKUP" />
 
     <meta name="abstract" content="{% trans "Multiply the storage locations of your database cluster" %}"/>
     <meta name="description" content="{% trans "DBBACKUP ensures the perinity of your databases, by storing them on multiple remote servers." %}"/>
 
-    <meta property="og:title" content="Foulassi - {% trans "Multiply the storage locations of your database cluster" %}" />
+    <meta property="og:title" content="DBBACKUP - {% trans "Multiply the storage locations of your database cluster" %}" />
 {#    <meta property="og:image" content="{% static 'foulassi/img/foulassi_splash.png' %}" />#}
     <meta property="og:description" content="{% trans "DBBACKUP ensures the perinity of your databases, by storing them on multiple remote servers." %}" />
 
-    <link rel="manifest" href="{% static 'foulassi/manifest.json' %}">
+{#    <link rel="manifest" href="{% static 'foulassi/manifest.json' %}">#}
+    <link rel="manifest" href="{% static 'dbbackup/img/dbbackup-logo.png' %}">
+    <meta name="og:image" href="{% static 'dbbackup/img/dbbackup-logo.png' %}">
 
 {% endblock %}
 {% block head_style %}
     {{ block.super }}
     <link rel='stylesheet' href="{% static 'website/css/apps.css' %}" />
     <link rel='stylesheet' href="{% static 'foulassi/css/saas.css' %}" />
+    <style>
+        .edge-panel-left {display: none}
+    </style>
 {% endblock %}
 
 {% block site_menu %}{% endblock %}
 
-{% block page_content %}
-    <section class="main-feat banner site" style="padding-top: 15vh" >
+{% block content %}
+    <section class="main-feat banner site" style="padding-top: 15vh;" >
         <div class="container">
             <div class="row desc">
-                <div class="col-sm-5 col-md-10 col-md-push-1" style="text-align: center;">
-                    <h1 style="margin-top: 0px; line-height: 75px; text-align: center;">{% trans "Automating and scheduling backups from your cluster of databases" %}</h1>
+                <div class="col-sm-5 col-md-10 col-md-push-1 text-center">
+                    <img src="{% static 'dbbackup/img/cloud-hosting.jpg' %}">
+                    <h1 style="margin-top: 0px; margin-bottom: 90px; line-height: 75px; text-align: center;">{% trans "Automating and scheduling backups from your cluster of databases" %}</h1>
                     <p>
 {#                      Prevent your users data against deletion, #}
 {#                      corruption or by automating and scheduling backups into different remote servers.#}
@@ -48,7 +53,7 @@
             </div>
         </div>
     </section>
-    <section class="main-feat banner site" style="color: #fff;margin-top: 10vh; background-image: url('{% static 'dbbackup/img/SystemsHero.jpg' %}');">
+    <section class="main-feat banner site" style="color: #fff;margin-top: 40vh; background-image: url('{% static 'dbbackup/img/SystemsHero.jpg' %}');">
         <div class="container">
             <div class="row desc">
                 <div class="col-md-3 col-lg-push-1" style="width: 45%;">
@@ -101,91 +106,6 @@
             </div>
         </div>
     </section>
-{#    <section class="features site">#}
-{#        <div class="container">#}
-{#            <div class="row features">#}
-{#                <div class="feat col-sm-12">#}
-{#                    <div class="col-sm-6">#}
-{#                        <img class="img-responsive" src="{% static 'foulassi/img/foulassi-stay-tuned.png' %}">#}
-{#                    </div>#}
-{#                    <div class="col-sm-6 description">#}
-{#                        <h2>{% trans "Easy Setup and configuration" %}</h2>#}
-{#                        <div class="desc">#}
-{#                            <p>{% blocktrans %}#}
-{#                                Deploy in 5 seconds ! Next, the wizard will guide you during initial setup for choosing#}
-{#                                the school system (French or English), configure payment installments, load subjects and#}
-{#                                create exam sessions . You can change all that later as you wish. From there you can#}
-{#                                easily add levels, classrooms and students. Those can be imported from XL files.#}
-{#                            {% endblocktrans %}</p>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </section>#}
-{#    <section class="features site" style="background: url({% static 'foulassi/img/foulassi-online-scores-input.png' %}) no-repeat; background-size: auto 100%">#}
-{#        <div class="container">#}
-{#            <div class="row features">#}
-{#                <div class="feat col-sm-12">#}
-{#                    <div class="col-sm-7">#}
-{#                        <img class="img-responsive" src="{% static 'foulassi/img/foulassi-connect-and-share.png' %}">#}
-{#                    </div>#}
-{#                    <div class="col-sm-5 col-sm-offset-7 description">#}
-{#                        <h2>{% trans "Scores input by teachers" %}</h2>#}
-{#                        <div class="desc">#}
-{#                            <p>{% blocktrans %}#}
-{#                                Let teachers put scores online by themselves and from home. They can do it using a PC,#}
-{#                                tablet or smartphone. Session results are automatically calculated when they do so.#}
-{#                                When all teachers have input their scores, there’s an alert that suggest to generate#}
-{#                                report cards.#}
-{#                            {% endblocktrans %}</p>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </section>#}
-{#    <section class="features site">#}
-{#        <div class="container">#}
-{#            <div class="row features">#}
-{#                <div class="feat col-sm-12">#}
-{#                    <div class="col-sm-6 description">#}
-{#                        <h2>{% trans "Report cards generation" %}</h2>#}
-{#                        <div class="desc">#}
-{#                            <p>{% blocktrans %}#}
-{#                                Get notified when all teachers have input their scores for a session. Simply click on#}
-{#                                the button to generate reports cards. Process is done on our cloud and you can come back#}
-{#                                later just to download the files grouped by classrooms.#}
-{#                            {% endblocktrans %}</p>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                    <div class="col-sm-6">#}
-{#                        <img class="img-responsive" src="{% static 'foulassi/img/foulassi-connect-and-share.png' %}">#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </section>#}
-{#    <section class="features site" style="background: url({% static 'foulassi/img/foulassi-screenshot-dashboard.png' %}) no-repeat; background-size: auto 100%">#}
-{#        <div class="container">#}
-{#            <div class="row features">#}
-{#                <div class="feat col-sm-12">#}
-{#                    <div class="col-sm-6 img">#}
-{#                        <img class="img-responsive" src="{% static 'foulassi/img/foulassi-screenshot-dashboard.png' %}">#}
-{#                    </div>#}
-{#                    <div class="col-sm-5 col-sm-offset-7">#}
-{#                        <h2>{% trans "Dashboard" %}</h2>#}
-{#                        <div class="desc">#}
-{#                            <p>{% blocktrans %}#}
-{#                                See detailed statistics on all what is going on in your school from a single screen.#}
-{#                                Easily switch between periods and sessions.#}
-{#                            {% endblocktrans %}</p>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </section>#}
 
     <section class="features site why-foulassi listing">
         <div class="container">
@@ -193,40 +113,6 @@
             <p style="font-size: 21px; margin-bottom: 40px; text-align: center">
                 {% trans "No matter which device you're currently using, DBBackup allow you to backup your databases in realtime on every terminals." %}
             </p>
-{#            <div class="row features">#}
-{#                <div class="col-sm-4">#}
-{#                    <div>#}
-{#                        <img class="img-responsive" src="{% static 'foulassi/img/foulassi-backup-archiving.png' %}">#}
-{#                        <h3>{% trans "Back-up and archiving" %}</h3>#}
-{#                    </div>#}
-{#                    <p>{% blocktrans %}#}
-{#                        As a cloud solution, we offer automatic backup and archiving of your data using the most up to#}
-{#                        date infrastructures and technologies. As time pass on, you can always come back on whatever#}
-{#                        previous year and see all data exactly as they were. We make sure you don’t lose a single byte of data.#}
-{#                    {% endblocktrans %}</p>#}
-{#                </div>#}
-{#                <div class="col-sm-4">#}
-{#                    <div>#}
-{#                        <img class="img-responsive" src="{% static 'foulassi/img/foulassi-continuous-improvement.png' %}">#}
-{#                        <h3>{% trans "Free and continuous improvements" %}</h3>#}
-{#                    </div>#}
-{#                    <p>{% blocktrans %}#}
-{#                        We have a wonderful team of experienced developers who work daily based on your issues and#}
-{#                        expectations to make sure that the platform gets better and better.#}
-{#                    {% endblocktrans %}</p>#}
-{#                </div>#}
-{#                <div class="col-sm-4">#}
-{#                    <div>#}
-{#                        <img class="img-responsive" src="{% static 'foulassi/img/foulassi-free-website.png' %}">#}
-{#                        <h3>{% trans "You have a website and blog" %}</h3>#}
-{#                    </div>#}
-{#                    <p>{% blocktrans %}#}
-{#                        Foulassi gives you a modern and free website on the same platform. You also have a blog to#}
-{#                        publish daily articles. Better market you schools and keep people in the know. Simply buy a#}
-{#                        domain name of your choice and change the default one to <em style="color: blue">mygreatschool.org</em>#}
-{#                    {% endblocktrans %}</p>#}
-{#                </div>#}
-{#            </div>#}
         </div>
 
     </section>
@@ -355,7 +241,7 @@
             </div>
             <div id="bottom-menu" class="hidden-xs">
                 <ul>
-                    {% include 'tsunami/snippets/language_switcher.html' %}
+                    {% include 'core/snippets/language_switcher.html' %}
                     <li><a href="http://blog.ikwen.com">{% trans 'Blog' %}</a> </li>
                     <li><a href="http://support.ikwen.com">{% trans 'Support' %}</a> </li>
                     <li><a href="http://blog.ikwen.com">{% trans 'Terms & conditions' %}</a> </li>

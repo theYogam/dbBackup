@@ -26,7 +26,6 @@ urlpatterns = patterns(
     url(r'^rewarding/', include('ikwen.rewarding.urls', namespace='rewarding')),
     url(r'^revival/', include('ikwen.revival.urls', namespace='revival')),
     url(r'^kakocase/', include('ikwen_kakocase.kakocase.urls', namespace='kakocase')),
-    url(r'^tsunami/', include('tsunami.urls', namespace='tsunami')),
     url(r'^shavida/', include('ikwen_shavida.shavida.urls', namespace='shavida')),
     url(r'^web/', include('ikwen_webnode.web.urls', namespace='web')),
     url(r'^foulassi/', include('ikwen_foulassi.foulassi.urls', namespace='foulassi')),

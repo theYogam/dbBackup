@@ -1,4 +1,6 @@
 import os
+from ftplib import FTP
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'conf.settings')
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -33,7 +35,7 @@ import sys
 
 
 reload(sys)
-sys.setdefaultencoding('utf-8') # Allow system to decode utf-8's strings such as ',",|,?
+sys.setdefaultencoding('utf-8')  # Allow system to decode utf-8's strings such as ',",|,?
 
 
 class Home(TemplateView):
@@ -95,17 +97,21 @@ class ChangeJobConfig(ChangeObjectBase):
                     ip = request.POST['ip%d' % i]
                     username = request.POST['username%d' % i]
                     password = request.POST['password%d' % i]
+                    port = request.POST.get('port%d' % i)
+                    if not port:
+                        port = 22
                     destination_server = {
                         'ip': ip,
                         'username': username,
-                        'password': password
+                        'password': password,
+                        'port': port
                     }
                     destination_server_form = DestinationServerForm(destination_server)
 
                     if destination_server_form.is_valid():
                         destination_server_form.save()
                         destination_server = DestinationServer.objects.create(ip=ip, username=username,
-                                                                              password=password)
+                                                                              password=password, port=port)
 
                         destination_server_list.append(destination_server)
                         job_config.destination_server_list = destination_server_list
@@ -137,7 +143,7 @@ class ChangeJobConfig(ChangeObjectBase):
         context = super(ChangeJobConfig, self).get_context_data(**kwargs)
         if kwargs.__len__() > 0:
             job_config_id = kwargs['object_id']
-            most_recent_backup = Backup.objects.filter(job_config_id=job_config_id).order_by('start_time')[:4]
+            most_recent_backup = Backup.objects.filter(job_config_id=job_config_id).order_by('created_on')[:4]
             context['job_config_id'] = job_config_id
             context['destination_server_list'] = JobConfig.objects.get(id=job_config_id).destination_server_list
             context['most_recent_backup'] = most_recent_backup
@@ -153,7 +159,7 @@ class BackupList(HybridListView):
     """
     model = Backup
     ordering = ('-id',)
-    list_filter = ('status', 'start_time')
+    list_filter = ('status', 'created_on')
     html_results_template_name = 'dbbackup/backup_list_result.html'
 
     def get_context_data(self, **kwargs):
@@ -165,11 +171,11 @@ class BackupList(HybridListView):
         if kwargs.__len__() > 0:
             backup_id = kwargs['object_id']
             matched_backup = Backup.objects.get(id=backup_id)
-            backup_list = Backup.objects.filter(job_config_id=matched_backup.job_config_id).order_by('start_time')
+            backup_list = Backup.objects.filter(job_config_id=matched_backup.job_config_id).order_by('created_on')
             context['backup_list'] = backup_list
             context['backup_id'] = backup_id
         else:
-            backup_list = Backup.objects.all().order_by('start_time')
+            backup_list = Backup.objects.all().order_by('created_on')
             context['backup_list'] = backup_list
 
         return context
@@ -226,14 +232,23 @@ def test_destination_server_connection(request, *args, **kwargs):
     server_ip = request.GET.get('ip')
     server_username = request.GET.get('username')
     server_password = request.GET.get('password')
+    server_port = request.GET.get('port')
 
     try:
-        ssh_transport = paramiko.Transport(server_ip, 22)
-        ssh_transport.connect(username=server_username,
-                              password=server_password)
+        if not server_port:
+            server_port = 22
+        ssh_transport = paramiko.Transport(server_ip, server_port)
+        ssh_transport.connect(username=server_username, password=server_password)
     except (paramiko.SSHException, paramiko.AuthenticationException, paramiko.BadAuthenticationType,
             paramiko.AUTH_FAILED, paramiko.ssh_exception) as e:
-        return HttpResponse(json.dumps({'success': False, 'error': e.message}), 'content-type: text/json')
+        message = e.message
+        try:
+            if not server_port:
+                server_port = 21
+            ftp = FTP(server_ip, server_username, server_password, (server_ip, server_port))
+            return HttpResponse(json.dumps({'success': True}), 'content-type: text/json')
+        except Exception as e:
+            return HttpResponse(json.dumps({'success': False, 'error': message + '\n' + e.message}), 'content-type: text/json')
 
     return HttpResponse(json.dumps({'success': True}), 'content-type: text/json')
 

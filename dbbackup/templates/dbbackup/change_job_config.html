@@ -118,6 +118,10 @@
                                     <label for="server-password">{% trans 'Password' %}:</label>
                                     <input type="password" class="form-control input-sm server-password" placeholder="**************">
                                 </div>
+                                <div class="form-group">
+                                    <label for="server-port">{% trans 'Port' %}:</label>
+                                    <input type="number" class="form-control input-sm server-port" min="0" max="65535" placeholder="22">
+                                </div>
                             </div>
 
                             {% if destination_server_list %}
@@ -139,6 +143,10 @@
                                             <label for="server-password">{% trans 'Password' %}:</label>
                                             <input type="password" class="form-control input-sm server-password" name="password{{ forloop.counter }}" placeholder="**************" value="{{ destination_server.password }}" required="required">
                                         </div>
+                                        <div class="form-group">
+                                            <label for="server-port">{% trans 'Port' %}:</label>
+                                            <input type="number" class="form-control input-sm server-port" min="0" max="65535" name="port{{ forloop.counter }}" placeholder="22" value="{{ destination_server.port }}">
+                                        </div>
                                     </div>
                                 {% endfor %}
                             {% endif %}
@@ -148,7 +156,6 @@
                             </div>
                             <div class="form-group test-dest-servers tpl">
                                 <button type="button" id="test-destination-servers" class=" btn btn-md btn-block btn-primary"  data-toggle="modal" style="background-color: #5879ef; color: #fff; border: none;">{% trans 'Check' %}</button>
-{#                                data-target="#modal-test-destination-servers"#}
                             </div>
                             <div class="form-group btn-save">
                                 <button id="btn-save" class="form-control btn btn-success btn-md" role="button"> {% trans "Save" %}</button>
@@ -162,7 +169,6 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content" style="background-color: #f4fbfe;">
                         <div style="text-align: center; padding: 25px;">
-{#                            class="modal-body "#}
                             <h4 class="modal-title">Please wait for while to test connection to DB server</h4>
                             <div style="display: inline-block; margin: auto;">
                                 <img style="" src="{% static 'dbbackup/img/spinning-wheel.gif' %}">
@@ -218,7 +224,7 @@
                                                 <div class="event-content" style="height: inherit;">
                                                     <div style="margin-bottom: 5px">
                                                         <div class="col-md-8 row"><b>{{ backup.job_config.db_type }} </b> {% trans ' on ' %} {{ backup.job_config.hostname }}</div>
-                                                        <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding: 0;"><time>{{ backup.start_time }}</time></div>
+                                                        <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding: 0;"><time>{{ backup.created_on }}</time></div>
                                                         <div class="clearfix"></div>
                                                     </div>
                                                     <div style="margin-bottom: 5px">
@@ -252,16 +258,16 @@
     <script>
         $(function () {
 
-            var endpoint;
-            var $ip, $username, $password, param, params;
-            var destServerIndex = 0, prevDestServerIndex = 0;
-            var isDBTypeHandlerSet;
-            var isHostnameHandlerSet;
-            var isOneDestServerNotSet;
-            var isDestServerHasError;
-            var numberOfCheckedServers;
-            var $hostname, $db_username, $db_password, $db_type;
-            var $error_fields;
+            let endpoint;
+            let $ip, $username, $password, $port, param, params;
+            let destServerIndex = 0, prevDestServerIndex = 0;
+            let isDBTypeHandlerSet;
+            let isHostnameHandlerSet;
+            let isOneDestServerNotSet;
+            let isDestServerHasError;
+            let numberOfCheckedServers;
+            let $hostname, $db_username, $db_password, $db_type;
+            let $error_fields;
             $('#id_hostname, #id_db_type, #id_run_every').attr({'required': 'required'});
             isHostnameHandlerSet = false;
             isDBTypeHandlerSet = false;
@@ -295,7 +301,7 @@
 
             /* This is what happen when clicking on add destination server button */
             $('body').on('click', "#add-destination-server", function () {
-               var endpoint;
+               let endpoint;
                 endpoint = "{% url 'dbbackup:test_db_connection' %}";
                 param = {
                 'hostname': $hostname.val(),
@@ -309,7 +315,7 @@
                     $('body').find('.test-dest-servers').removeClass('tpl');
                 }
 
-                /* Open a modal for an unpredictible delay time.*/
+                /* Open a modal for an unpredictable delay time.*/
                 $('#modal-test-db-server').modal
                 (
                     {backdrop: 'static'}
@@ -428,18 +434,9 @@
                     $('body').find('.test-dest-servers').addClass('tpl');
                 }
             }).on('click', '#test-destination-servers', () => {
-                var destServers;
-                var numberOfDestinationServers;
+                let destServers;
+                let numberOfDestinationServers;
                 endpoint = "{% url 'dbbackup:test_destination_server_connection' %}";
-                /*
-                if ($('body').find('.job-config-form').hasClass('job-config-form-checked')){
-                    $('.job-config-form input, .job-config-form select').on('focus', function () {
-                       $('body').find('.btn-save').addClass('tpl');
-                       $('body').find('.test-dest-servers').removeClass('tpl');
-                       check_db_server_form();
-                    });
-                }
-                */
 
                 if ($('body').find('.destination-server').hasClass('destination-server-already-exists')) {
                     destServers = $('.destination-server-already-exists').toArray();
@@ -451,6 +448,7 @@
                 $ip = new Array(numberOfDestinationServers);
                 $username = new Array(numberOfDestinationServers);
                 $password = new Array(numberOfDestinationServers);
+                $port = new Array(numberOfDestinationServers);
                 params = new Array(numberOfDestinationServers);
                 $('#modal-test-destination-servers').modal(
                     {backdrop: 'static'}
@@ -460,14 +458,17 @@
                     $ip[index] = $(destServer).find('.server-ip');
                     $username[index] = $(destServer).find('.server-username');
                     $password[index] = $(destServer).find('.server-password');
+                    $port[index] = $(destServer).find('.server-port');
                     params[index] = {
                         'ip': $ip[index].val(),
                         'username': $username[index].val(),
-                        'password': $password[index].val()
+                        'password': $password[index].val(),
+                        'port': $port[index].val()
                     };
                     removeErrorMessage($(destServer).find('.server-ip').parent());
                     removeErrorMessage($(destServer).find('.server-username').parent());
                     removeErrorMessage($(destServer).find('.server-password').parent());
+                    removeErrorMessage($(destServer).find('.server-port').parent());
 
                     if ($ip[index].val() === '') {
                         handler($ip[index]);
@@ -479,6 +480,10 @@
                     }
                     if ($password[index].val() === '') {
                         handler($password[index]);
+                        isOneDestServerNotSet = true;
+                    }
+                    if ($port[index].val() < 0 && $port[index].val() > 65535) {
+                        handler($port[index]);
                         isOneDestServerNotSet = true;
                     }
                 });
@@ -506,7 +511,7 @@
                                 return false;
                             }
                         }
-                        $.each([$ip[index], $username[index], $password[index]], function (i, element) {
+                        $.each([$ip[index], $username[index], $password[index], $port[index]], function (i, element) {
                             displayErrorMessage(element);
                             if (index === (numberOfDestinationServers-1)){
                                 $('#modal-test-destination-servers').modal('hide');
@@ -553,7 +558,7 @@
                 }
             }
             function cloningDestinationServer() {
-                var $selector = $('.destination-server.tpl').clone().removeClass('tpl');
+                let $selector = $('.destination-server.tpl').clone().removeClass('tpl');
                 if ($('body').find('.destination-server').hasClass('destination-server-already-exists')) {
                         $selector.insertAfter($('.destination-server-already-exists:last'));
                 } else {
@@ -568,10 +573,11 @@
                     $(this).find('.server-ip').attr({'name': 'ip' + (i+1), 'required': 'required'});
                     $(this).find('.server-username').attr({'name': 'username' + (i+1), 'required': 'required'});
                     $(this).find('.server-password').attr({'name': 'password' + (i+1), 'required': 'required'});
+                    $(this).find('.server-port').attr({'name': 'port' + (i+1)});
                 });
             }
             function check_db_server_form () {
-                var endpoint;
+                let endpoint;
                 {#endpoint = "{% url 'dbbackup:test_db_connection' %}";#}
                 param = {
                 'hostname': $hostname.val(),

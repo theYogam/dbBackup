@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-28 09:35+0100\n"
-"PO-Revision-Date: 2019-09-28 09:35+0100\n"
+"POT-Creation-Date: 2020-06-27 15:11+0100\n"
+"PO-Revision-Date: 2020-06-27 15:56+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -18,6 +18,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.6\n"
 
+#: cron.py:269
+msgid "New completed backup"
+msgstr "Nouveau backup terminé"
+
+#: cron.py:303
+#, python-format
+msgid ""
+"Backup of %(db_name)s from %(hostname)s created at %(time)s completed with "
+"status <strong>%(status)s</strong>"
+msgstr ""
+
 #: conf/settings.py:154
 msgid "English"
 msgstr "Anglais"
@@ -26,92 +37,85 @@ msgstr "Anglais"
 msgid "French"
 msgstr "Français"
 
-#: dbbackup/models.py:32 dbbackup/templates/dbbackup/change_job_config.html:57
-#: dbbackup/templates/dbbackup/change_job_config.html:77
+#: dbbackup/models.py:32 dbbackup/templates/dbbackup/change_job_config.html:110
+#: dbbackup/templates/dbbackup/change_job_config.html:135
 msgid "Server IP"
 msgstr "Add. IP du serveur"
 
-#: dbbackup/models.py:34
+#: dbbackup/models.py:33
 msgid "Server username"
 msgstr "Username Serveur"
 
-#: dbbackup/models.py:36
+#: dbbackup/models.py:34
 msgid "Server password"
 msgstr "Mot de passe Serveur"
 
-#: dbbackup/models.py:46
+#: dbbackup/models.py:35
+#, fuzzy
+msgid "Server port"
+msgstr "Mot de passe Serveur"
+
+#: dbbackup/models.py:45
 msgid "Hostname"
 msgstr "Hôte"
 
-#: dbbackup/models.py:48 dbbackup/views.py:56
+#: dbbackup/models.py:46 dbbackup/views.py:58
 msgid "Database type"
 msgstr "Type de BD"
 
-#: dbbackup/models.py:49
+#: dbbackup/models.py:47
 msgid "Database name"
 msgstr "Nom BD"
 
-#: dbbackup/models.py:50
+#: dbbackup/models.py:48
 msgid "Database username"
 msgstr "Username BD"
 
-#: dbbackup/models.py:52
+#: dbbackup/models.py:49
 msgid "Database password"
 msgstr "Mot de passe BD"
 
-#: dbbackup/models.py:53
+#: dbbackup/models.py:50
 msgid "Run every"
 msgstr "Executer tous les"
 
-#: dbbackup/models.py:66
+#: dbbackup/models.py:62
 msgid "Status"
 msgstr "Status"
 
-#: dbbackup/models.py:67
-msgid "Start time"
-msgstr "Heure de début"
-
-#: dbbackup/models.py:68
+#: dbbackup/models.py:63
 msgid "Backup relative file path"
 msgstr "Chemin du fichier Backup"
 
-#: dbbackup/models.py:69
+#: dbbackup/models.py:64
 msgid "Backup file size"
 msgstr "Taille du backup"
 
-#: dbbackup/models.py:70
+#: dbbackup/models.py:65
 msgid "Error messages"
 msgstr "Messages d'erreur"
 
-#: dbbackup/views.py:57
+#: dbbackup/views.py:59
 msgid "Date created"
 msgstr "Date de création"
 
-#: dbbackup/templates/core/app_base_admin.html:10
-msgid "Job configs"
-msgstr ""
-
-#: dbbackup/templates/core/app_base_admin.html:14
-msgid "Backups"
-msgstr ""
-
 #: dbbackup/templates/dbbackup/backup_list_result.html:24
 #: dbbackup/templates/dbbackup/backup_list_result.html:78
-#: dbbackup/templates/dbbackup/change_job_config.html:147
+#: dbbackup/templates/dbbackup/change_job_config.html:226
 #: dbbackup/templates/dbbackup/job_config_list_result.html:16
 msgid " on "
 msgstr " le "
 
 #: dbbackup/templates/dbbackup/backup_list_result.html:30
 #: dbbackup/templates/dbbackup/backup_list_result.html:84
-#: dbbackup/templates/dbbackup/change_job_config.html:152
+#: dbbackup/templates/dbbackup/change_job_config.html:231
 #: dbbackup/templates/dbbackup/job_config_list_result.html:22
 msgid "Database: "
 msgstr "Base de donnée: "
 
 #: dbbackup/templates/dbbackup/backup_list_result.html:43
 #: dbbackup/templates/dbbackup/backup_list_result.html:97
-#: dbbackup/templates/dbbackup/change_job_config.html:158
+#: dbbackup/templates/dbbackup/change_job_config.html:236
 msgid "destination server(s)"
 msgstr "server de destination(s)"
 
@@ -149,52 +153,66 @@ msgstr ""
 msgid "%(count)s results"
 msgstr "%(count)s résultats"
 
-#: dbbackup/templates/dbbackup/change_job_config.html:48
+#: dbbackup/templates/dbbackup/change_job_config.html:45
 msgid "Job Configuration"
 msgstr "Configuration du Job"
 
-#: dbbackup/templates/dbbackup/change_job_config.html:61
-#: dbbackup/templates/dbbackup/change_job_config.html:81
+#: dbbackup/templates/dbbackup/change_job_config.html:46
+msgid "Fill the database server information"
+msgstr ""
+
+#: dbbackup/templates/dbbackup/change_job_config.html:102
+msgid ""
+"Fill information of remote destination server(s) where backups will be stored"
+msgstr ""
+
+#: dbbackup/templates/dbbackup/change_job_config.html:114
+#: dbbackup/templates/dbbackup/change_job_config.html:139
 msgid "Username"
-msgstr ""
+msgstr "Nom d'utilisateur"
 
-#: dbbackup/templates/dbbackup/change_job_config.html:65
-#: dbbackup/templates/dbbackup/change_job_config.html:85
+#: dbbackup/templates/dbbackup/change_job_config.html:118
+#: dbbackup/templates/dbbackup/change_job_config.html:143
 msgid "Password"
+msgstr "Mot de passe"
+
+#: dbbackup/templates/dbbackup/change_job_config.html:122
+#: dbbackup/templates/dbbackup/change_job_config.html:147
+msgid "Port"
 msgstr ""
 
-#: dbbackup/templates/dbbackup/change_job_config.html:92
+#: dbbackup/templates/dbbackup/change_job_config.html:155
 msgid "Add destination server"
 msgstr "Ajouter un serveur de dest"
 
-#: dbbackup/templates/dbbackup/change_job_config.html:95
+#: dbbackup/templates/dbbackup/change_job_config.html:158
 msgid "Check"
 msgstr "Vérifier"
 
-#: dbbackup/templates/dbbackup/change_job_config.html:99
+#: dbbackup/templates/dbbackup/change_job_config.html:161
 msgid "Save"
 msgstr "Enregistrer"
 
-#: dbbackup/templates/dbbackup/change_job_config.html:128
+#: dbbackup/templates/dbbackup/change_job_config.html:209
 msgid "Most recent backups"
 msgstr "Backups les plus récents"
 
-#: dbbackup/templates/dbbackup/change_job_config.html:132
+#: dbbackup/templates/dbbackup/change_job_config.html:213
 msgid "Show more"
 msgstr "Voir plus"
 
-#: dbbackup/templates/dbbackup/change_job_config.html:370
+#: dbbackup/templates/dbbackup/change_job_config.html:572
 msgid "Destination server "
 msgstr "Serveur de dest. "
 
-#: dbbackup/templates/dbbackup/home.html:5
-#: dbbackup/templates/dbbackup/home.html:12
-#: dbbackup/templates/dbbackup/home.html:15
+#: dbbackup/templates/dbbackup/home.html:4
+#: dbbackup/templates/dbbackup/home.html:11
+#: dbbackup/templates/dbbackup/home.html:14
 msgid "Multiply the storage locations of your database cluster"
 msgstr "Multipliez les zones de stockage de votre cluster de base de données"
 
-#: dbbackup/templates/dbbackup/home.html:13
-#: dbbackup/templates/dbbackup/home.html:17
+#: dbbackup/templates/dbbackup/home.html:12
+#: dbbackup/templates/dbbackup/home.html:16
 msgid ""
 "DBBACKUP ensures the perinity of your databases, by storing them on multiple "
 "remote servers."
@@ -202,13 +220,13 @@ msgstr ""
 "DBBACKUP assure la pérennité de vos bases de données, en les stockant sur "
 "plusieurs serveurs distants."
 
-#: dbbackup/templates/dbbackup/home.html:35
+#: dbbackup/templates/dbbackup/home.html:40
 msgid "Automating and scheduling backups from your cluster of databases"
 msgstr ""
 "Automatisation et planification des sauvegardes à partir de votre cluster de "
 "bases de données"
 
-#: dbbackup/templates/dbbackup/home.html:39
+#: dbbackup/templates/dbbackup/home.html:44
 msgid ""
 "\n"
 "                            Holding a big cluster of databases is not easy "
@@ -228,28 +246,37 @@ msgstr ""
 "sur de nombreux serveurs distants.\n"
 "                        "
 
-#: dbbackup/templates/dbbackup/home.html:44
+#: dbbackup/templates/dbbackup/home.html:50
 msgid "Don't wait things to go wrong !!!"
 msgstr "N'attendez plus !!!"
 
-#: dbbackup/templates/dbbackup/home.html:46
-#: dbbackup/templates/dbbackup/home.html:331
+#: dbbackup/templates/dbbackup/home.html:51
+#: dbbackup/templates/dbbackup/home.html:228
 msgid "Backup now"
 msgstr "Backup maintenant"
 
-#: dbbackup/templates/dbbackup/home.html:64
+#: dbbackup/templates/dbbackup/home.html:62
+#, fuzzy
+msgid "Configure a job"
+msgstr "Configuration du Job"
+
+#: dbbackup/templates/dbbackup/home.html:68
+msgid "Visualize backups in real time"
+msgstr "Observez vos backups en temps réel"
+
+#: dbbackup/templates/dbbackup/home.html:80
 msgid "Support for a multiple types of Databases"
 msgstr "Prise en charge de plusieurs types de Base de données"
 
-#: dbbackup/templates/dbbackup/home.html:88
+#: dbbackup/templates/dbbackup/home.html:104
 msgid "Get started"
 msgstr "Lancez-vous"
 
-#: dbbackup/templates/dbbackup/home.html:181
+#: dbbackup/templates/dbbackup/home.html:112
 msgid "Available on every devices"
 msgstr "Accessible sur tous les terminaux"
 
-#: dbbackup/templates/dbbackup/home.html:183
+#: dbbackup/templates/dbbackup/home.html:114
 msgid ""
 "No matter which device you're currently using, DBBackup allow you to backup "
 "your databases in realtime on every terminals."
@@ -257,13 +284,13 @@ msgstr ""
 "Peu importe l'appareil que vous utilisez présentement, DBBackup vous permet "
 "de backup vos bases de données en temps réel sur tous types de terminaux."
 
-#: dbbackup/templates/dbbackup/home.html:230
+#: dbbackup/templates/dbbackup/home.html:127
 msgid "On PC"
 msgstr "Sur PC"
 
-#: dbbackup/templates/dbbackup/home.html:232
-#: dbbackup/templates/dbbackup/home.html:255
-#: dbbackup/templates/dbbackup/home.html:278
+#: dbbackup/templates/dbbackup/home.html:129
+#: dbbackup/templates/dbbackup/home.html:152
+#: dbbackup/templates/dbbackup/home.html:175
 msgid ""
 "\n"
 "                                Yes, your platform accepts online payment "
@@ -292,19 +319,19 @@ msgstr ""
 "PageMaker including versions of Lorem Ipsum.\n"
 "                            "
 
-#: dbbackup/templates/dbbackup/home.html:253
+#: dbbackup/templates/dbbackup/home.html:150
 msgid "On tablet"
 msgstr "Sur tablette"
 
-#: dbbackup/templates/dbbackup/home.html:276
+#: dbbackup/templates/dbbackup/home.html:173
 msgid "On phone"
 msgstr "Sur téléphone"
 
-#: dbbackup/templates/dbbackup/home.html:293
+#: dbbackup/templates/dbbackup/home.html:190
 msgid "You're in good company"
 msgstr "Vous êtes sur une excellente entreprise"
 
-#: dbbackup/templates/dbbackup/home.html:294
+#: dbbackup/templates/dbbackup/home.html:191
 msgid ""
 "\n"
 "                We have been on the field for many years, building and "
@@ -322,7 +349,7 @@ msgstr ""
 "                Rejoignez ces entrepises avec assurance.\n"
 "            "
 
-#: dbbackup/templates/dbbackup/home.html:328
+#: dbbackup/templates/dbbackup/home.html:225
 msgid ""
 "\n"
 "            Configure jobs on <strong>DBBackup Weblets</strong> now and wait "
@@ -336,27 +363,27 @@ msgstr ""
 "\t\tsur des serveurs distants .\n"
 "        "
 
-#: dbbackup/templates/dbbackup/home.html:340
+#: dbbackup/templates/dbbackup/home.html:237
 msgid "All rights reserved."
 msgstr "Tous les droits reservés."
 
-#: dbbackup/templates/dbbackup/home.html:342
+#: dbbackup/templates/dbbackup/home.html:239
 msgid "Legal mentions"
 msgstr "Mentions légales"
 
-#: dbbackup/templates/dbbackup/home.html:348
+#: dbbackup/templates/dbbackup/home.html:245
 msgid "Blog"
 msgstr "Blog"
 
-#: dbbackup/templates/dbbackup/home.html:349
+#: dbbackup/templates/dbbackup/home.html:246
 msgid "Support"
 msgstr "Support"
 
-#: dbbackup/templates/dbbackup/home.html:350
+#: dbbackup/templates/dbbackup/home.html:247
 msgid "Terms & conditions"
 msgstr "Termes & conditions"
 
-#: dbbackup/templates/dbbackup/home.html:351
+#: dbbackup/templates/dbbackup/home.html:248
 msgid "About ikwen"
 msgstr "À propos d'ikwen"
 
@@ -367,6 +394,91 @@ msgstr "Exécuter tous les: "
 #: dbbackup/templates/dbbackup/job_config_list_result.html:40
 msgid "Destination servers: "
 msgstr "Serveurs de dest.: "
+
+#: dbbackup/templates/mails/new_backup_notif.html:141
+#, python-format
+msgid ""
+"\n"
+"                Backup of <strong>%(db_name)s</strong> from %(hostname)s "
+"issued on %(time)s completed with the status<strong>%(status)s</strong>.\n"
+"            "
+msgstr ""
+"\n"
+"                Backup of <strong>%(db_name)s</strong> from %(hostname)s "
+"issued on %(time)s completed with the status<strong>%(status)s</strong>.\n"
+"            "
+
+#: dbbackup/templates/mails/new_backup_notif.html:201
+#, python-format
+msgid ""
+" Dear <strong>%(staff_name)s</strong>,<br style=\"-ms-text-size-"
+"adjust:100%%;-webkit-text-size-adjust:100%%;\" >Backup of <strong>"
+"%(db_name)s</strong> from %(hostname)s created on %(start_time)s  completed "
+"with the status <strong>%(status)s</strong>"
+msgstr ""
+
+#: dbbackup/templates/mails/new_backup_notif.html:203
+msgid "It failed because of :"
+msgstr ""
+
+#: dbbackup/templates/mails/new_backup_notif.html:206
+#, python-format
+msgid ""
+"\n"
+"                                        It's %(file_size)s heavy and located "
+"at %(location)s.\n"
+"                                    "
+msgstr ""
+
+#: dbbackup/templates/mails/new_backup_notif.html:210
+msgid ""
+"Click below to download, but before that make sure have the right to do that."
+msgstr ""
+
+#: dbbackup/templates/mails/new_backup_notif.html:218
+msgid "Download"
+msgstr ""
+
+#: dbbackup/templates/mails/new_backup_notif.html:251
+msgid "CONFIDENTIALITY"
+msgstr ""
+
+#: dbbackup/templates/mails/new_backup_notif.html:253
+#, python-format
+msgid ""
+"\n"
+"                    The information contained in this e-mail and any "
+"accompanying documents is confidential or otherwise\n"
+"                    protected from disclosure. If you are not the intended "
+"recipient, please immediately alert the\n"
+"                    sender by reply e-mail and delete this message and any "
+"attachments. Any copy, dissemination or\n"
+"                    unauthorized access of the contents of this message by "
+"anyone other than the intended recipient\n"
+"                    is strictly prohibited. E-mails may be susceptible to "
+"falsification or alteration and cause data\n"
+"                    corruption and/or loss of data. %(company_name)s and/or "
+"any of its subsidiaries decline any liability resulting\n"
+"                    from the consequences thereof. Therefore, this e-mail "
+"and any attachments are used at your own risk.\n"
+"                "
+msgstr ""
+
+#: dbbackup/templates/mails/new_backup_notif.html:264
+#, python-format
+msgid "&copy; %(year)s %(company_name)s. All Rights Reserved."
+msgstr ""
+
+#: templates/core/app_base_admin.html:10
+msgid "Job configs"
+msgstr ""
+
+#: templates/core/app_base_admin.html:14
+msgid "Backups"
+msgstr ""
+
+#~ msgid "Start time"
+#~ msgstr "Heure de début"
 
 #~ msgid "See details"
 #~ msgstr "Voir détails"
