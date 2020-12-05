@@ -22,8 +22,8 @@ class BackupAdmin(admin.ModelAdmin):
     """
     comment
     """
-    list_display = ('job_config', 'status', 'relative_file_path', 'file_size', 'file_size_hr', 'error_messages')
-    fields = ('job_config', 'status', 'relative_file_path', 'file_size', 'file_size_hr', 'error_messages')
+    list_display = ('job_config', 'status', 'relative_file_path', 'file_size', 'file_size_hr', 'error_messages', 'run_time')
+    fields = ('job_config', 'status', 'relative_file_path', 'file_size', 'file_size_hr', 'error_messages', 'run_time')
 
 
 admin.site.register(DestinationServer, DestinationServerAdmin)

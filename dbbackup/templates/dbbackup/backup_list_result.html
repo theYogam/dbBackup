@@ -98,7 +98,12 @@
                                     <div class="col-sm-4 row text-muted pull-right text-right" style="color: #2daacd; font-weight: bolder">{{ obj.status}}</div>
                                     <div class="clearfix"></div>
                                 </div>
-
+                                {% if obj.run_time %}
+                                    <div style="margin-bottom: 5px">
+                                        <div class="col-sm-4 row text-muted pull-left" style="color: #cd106d; font-weight: bolder">{{ obj.run_time }} s</div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                {% endif %}
                             </div>
                             <div class="clearfix"></div>
                         </div>

@@ -1,9 +1,12 @@
 import os
 import logging
+import sys
 from datetime import datetime, timedelta
 
+sys.path.append("/home/libran/virtualenv/lib/python2.7/site-packages")
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'conf.settings')
 
+from django.core import mail
 from django.core.mail import EmailMessage
 from django.utils.translation import ugettext as _, activate
 
@@ -27,10 +30,8 @@ def notify_staff():
     for backup in Backup.objects.order_by('-id').filter(status=FAILED):
         sender = 'ikwen DBBACKUP <no-reply@ikwen.com>'
         subject = _("New failed backup")
-        service = get_service_instance()
-        recipient_list = [service.member.email, 'k.sihon@ikwen.com', 'c.fotso@ikwen.com',
-                          'r.yopa@ikwen.com', 'w.futchea@ikwen.com',
-                          'y.siaka@ikwen.com', 'rmbogning@gmail.com']
+        recipient_list = [get_service_instance().member.email]
+        staff_list = [staff.email for staff in Member.objects.filter(is_staff=True)]
         job_config = backup.job_config
         extra_context = {'hostname': job_config.hostname,
                          'db_name': job_config.db_name,
@@ -49,6 +50,7 @@ def notify_staff():
             return
         msg = EmailMessage(subject, html_content, sender, recipient_list)
         msg.content_subtype = "html"
+        msg.bcc = staff_list
         msg.send()
 
 

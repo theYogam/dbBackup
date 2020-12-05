@@ -5,12 +5,14 @@ import logging
 import socket
 import subprocess
 import paramiko
-from datetime import datetime
+from datetime import datetime, timedelta
 from ftplib import FTP
 
+sys.path.append("/home/libran/virtualenv/lib/python2.7/site-packages")
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'conf.settings')
 
 # from typing import Dict, List, Any, Union
+from django.core import mail
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
 
@@ -66,8 +68,12 @@ def dump_database(hostname, db_name, db_type, db_username, db_password, dump_out
         dumper += "ls"
     elif db_type == 'PostgreSQL':
         dumper += "ls"
+    print "%s \n" % dumper
+    dump_error_file = open("dump_error.txt", "a")
+    dump_error_code = subprocess.call(dumper, stderr=dump_error_file)
+    dump_error_file.close()
 
-    return subprocess.call(dumper), dump_output_path
+    return dump_error_code, dump_output_path, os.getcwd() + '/' + dump_error_file.name
 
 
 def send_file_thru_sftp(db_hostname, backup, destination_server_list, source_file_path):
@@ -81,8 +87,7 @@ def send_file_thru_sftp(db_hostname, backup, destination_server_list, source_fil
     error_message = []  # type: # List[Dict[str, Union[str, Any]]]
     return_code = 0
     remote_file_size = 0
-    remote_file_path = 'IKWEN_DB_BACKUPS/' + db_hostname + backup.created_on.strftime('_%Y-%m-%d_%H-%M-%S') \
-                       + '/'
+    remote_dir = 'IKWEN_DB_BACKUPS/' + db_hostname + backup.created_on.strftime('_%Y-%m-%d_%H-%M-%S') + '/'
     i = 0
 
     for destination_server in destination_server_list:
@@ -95,16 +100,21 @@ def send_file_thru_sftp(db_hostname, backup, destination_server_list, source_fil
             ssh_transport = paramiko.Transport(host_ip, port)
             ssh_transport.connect(username=username, password=password)
             sftp_session = paramiko.SFTPClient.from_transport(ssh_transport)
+            print "Connection to %s established \n" % host_ip
 
             if not os.path.exists('IKWEN_DB_BACKUPS'):
                 sftp_session.mkdir('IKWEN_DB_BACKUPS')
-            if not os.path.exists(remote_file_path):
-                sftp_session.mkdir(remote_file_path)
+                print "Create directory IKWEN_DB_BACKUPS"
+            if not os.path.exists(remote_dir):
+                sftp_session.mkdir(remote_dir)
+                print "Create directory %s\n" % remote_dir
 
-            remote_file_path += source_file_path.split('/')[-1]
-            sftp_session.put(source_file_path, remote_file_path, confirm=True)
+            remote_dir += source_file_path.split('/')[-1]
+            print "Remote directory now is %d\n" % remote_dir
+            sftp_session.put(source_file_path, remote_dir, confirm=True)
             remote_file_size = os.path.getsize('/' + os.getcwd().split('/')[1] + '/' + os.getcwd().split('/')[2] + '/'
-                                               + remote_file_path)
+                                               + remote_dir)
+            print "File sent successfully ...\n"
             sftp_session.close()
 
         except paramiko.AuthenticationException:
@@ -114,7 +124,7 @@ def send_file_thru_sftp(db_hostname, backup, destination_server_list, source_fil
             error_message.append(
                 {'hostname': host_ip, 'encountered_error': message}
             )
-            # print message
+            print message
             return_code = 1
 
         except paramiko.SSHException:
@@ -124,7 +134,7 @@ def send_file_thru_sftp(db_hostname, backup, destination_server_list, source_fil
                 {'hostname': host_ip, 'encountered_error': message}
             )
             return_code = 1
-            # print message
+            print message
 
         except:
             message = 'Unknown error\n'
@@ -137,15 +147,24 @@ def send_file_thru_sftp(db_hostname, backup, destination_server_list, source_fil
             error_message = []
             try:  # Try connection with FTP protocol
                 ftp = FTP(host_ip, username, password, (host_ip, port))
-                if not os.path.exists('IKWEN_DB_BACKUPS'):
+                try:
                     ftp.mkd('IKWEN_DB_BACKUPS')
-                if not os.path.exists(remote_file_path):
-                    ftp.mkd(remote_file_path)
+                    print "Create directory IKWEN_DB_BACKUPS"
+                except:
+                    pass
+                ftp.cwd('IKWEN_DB_BACKUPS/')
+                print "Change directory to IKWEN_DB_BACKUPS"
+                try:
+                    ftp.mkd(db_hostname + backup.created_on.strftime('_%Y-%m-%d_%H-%M-%S') + '/')
+                    print "Create directory %s" % db_hostname + backup.created_on.strftime('_%Y-%m-%d_%H-%M-%S') + '/'
+                except:
+                    pass
+                ftp.cwd(db_hostname + backup.created_on.strftime('_%Y-%m-%d_%H-%M-%S') + '/')
+
                 source_file = open(source_file_path, 'rb')
-                ftp.cwd(remote_file_path)
                 ftp.storbinary('STOR ' + source_file_path.split('/')[-1], source_file)
                 remote_file_size = ftp.size(source_file_path.split('/')[-1])
-                remote_file_path += source_file_path.split('/')[-1]
+                remote_dir += source_file_path.split('/')[-1]
                 return_code = 0
                 ftp.close()
                 if i == len(destination_server_list):
@@ -154,17 +173,17 @@ def send_file_thru_sftp(db_hostname, backup, destination_server_list, source_fil
                     print "Quit the tunnel\n"
 
             except Exception as e:
-                message = e.message
+                message = e.message + '\n'
                 logger.debug(message, exc_info=True)
                 error_message.append(
                     {'hostname': host_ip, 'encountered_error': message}
                 )
                 return_code = 1
-                # print message
+                print message
 
         i += 1
 
-    return remote_file_path, remote_file_size, error_message, return_code
+    return remote_dir, remote_file_size, error_message, return_code
 
 
 def find_file_size(file_size):
@@ -194,50 +213,49 @@ def do_backup(job_config):
     :return:
     """
 
-    backup = Backup.objects.create(job_config=job_config, status=STARTED)
-    backup.status = RUNNING
-    backup.save()
+    backup = Backup.objects.create(job_config=job_config, status=RUNNING)
+    t0 = datetime.now()
     dump_output_path = "IKWEN_DUMP/" + 'all'
     if job_config.db_name:
         dump_output_path = "IKWEN_DUMP/" + job_config.db_name
-    dump_return_code, dump_output_path = dump_database(job_config.hostname, job_config.db_name, job_config.db_type,
+    dump_return_code, dump_output_path, dump_log_file_path = dump_database(job_config.hostname, job_config.db_name, job_config.db_type,
                                                        job_config.db_username, job_config.db_password,
                                                        dump_output_path)
-    dump_archive_file = dump_output_path + '.7z'
-    zip_return_code = subprocess.call(["7z", "a", dump_archive_file, dump_output_path + '/*'])
-    destination_server_list = job_config.destination_server_list
 
     if dump_return_code != 0:
         backup.status = FAILED
-        message = 'Failed to dump the database server hosting at ' + job_config.hostname
-        logger.error(message, exc_info=True)
-        backup.error_messages = message
+        message = 'Failed to dump the database: check log file ' + dump_log_file_path
+        backup.error_messages = message + '\n'
         backup.save()
-        # print message
+        print message
         return 0
+
+    dump_archive_file = dump_output_path + '.7z'
+    zip_log_file = open("zip_error.txt", "a")
+    zip_return_code = subprocess.call(["7z", "a", dump_archive_file, dump_output_path + '/*'], stderr=zip_log_file)
+    zip_log_file.close()
 
     if zip_return_code != 0:
-        message = 'Failed to build the dump archive ' + str(zip_return_code)
+        message = 'Failed to build the dump archive: check log file ' + os.getcwd() + zip_log_file.name
         backup.status = FAILED
-        backup.error_messages = message
-        logger.error(message, exc_info=True)
+        backup.error_messages = message + '\n'
         backup.save()
-        # print message
+        print message
         return 0
 
-    backup_relative_file_path, size_backup_file, error_message, return_code = send_file_thru_sftp\
-        (job_config.hostname, backup, destination_server_list, dump_archive_file)
-    if return_code != 0:
+    file_path, size, error, code = send_file_thru_sftp(job_config.hostname, backup,
+                                                              job_config.destination_server_list, dump_archive_file)
+    if code != 0:
         i = 0
         message = ''
-        while i < len(error_message):
-            message += error_message[i].get('encountered_error')
+        while i < len(error):
+            message += '\n' + str(i+1) + '. ' + error[i].get('encountered_error') + '\n'
             i += 1
         backup.status = FAILED
-        backup.error_messages = message
+        backup.error_messages = message + '\n'
         logger.error(message, exc_info=True)
         backup.save()
-        # print message
+        print message
         return 0
 
     eraser_return_code = subprocess.call(['rm', '-f', '-R', 'IKWEN_DUMP'])
@@ -246,23 +264,24 @@ def do_backup(job_config):
         backup.status = FAILED
         logger.error(message, exc_info=True)
         backup.save()
-        # print message
+        print message
         return 0
 
-    backup.relative_file_path = backup_relative_file_path
-    file_size = size_backup_file
+    backup.relative_file_path = file_path
+    file_size = size
 
     print "%d\n" % file_size
 
     s, unit = find_file_size(file_size)
 
-    backup.file_size_hr = str(file_size % s) + unit
+    backup.file_size_hr = str(file_size / s) + unit
     backup.file_size = file_size
 
     print "%s\n" % backup.file_size
 
     backup.status = SUCCESS
-
+    tf = datetime.now()
+    backup.run_time = (tf - t0).total_seconds()
     backup.save()
 
     return 1
@@ -271,8 +290,8 @@ def do_backup(job_config):
 if __name__ == '__main__':
     now = datetime.now()
     for job_config in JobConfig.objects.order_by('-id').all():
-        # if now.hour % job_config.run_every == 0:
-        return_code = do_backup(job_config)
+        if now.hour % job_config.run_every == 0:
+            do_backup(job_config)
 
 
 

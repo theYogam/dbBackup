@@ -199,15 +199,14 @@
                          <div style="padding: 15px; font-size:15px; margin-bottom: 20px;">
                               <p style="-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;color:#555; overflow-wrap: break-word; text-align: justify;" >
                                 <ul>
-                                    <li>Created on: {{ start_time }}</li>
-                                    <li>Database: {{ db_name }}</li>
-                                    <li>Hostname origin: {{ hostname }}</li>
-                                    <li>Reasons: {{ location }}
-                                        <ul>
-                                            {% for error in error_messages %}
-                                                <ol>{{ error }}</ol>
-                                            {% endfor %}
-                                        </ul>
+                                    <li><h3>Created on:</h3> {{ start_time }}</li>
+                                    <li><h3>Database:</h3>{% if db_name %} {{ db_name }}{% else %} ALL{% endif %}</li>
+                                    <li><h3>Hostname origin:</h3> {{ hostname }}</li>
+                                    <li>
+                                        <h3>Reasons:</h3>
+                                        <p>
+                                            {{ error_messages }}
+                                         </p>
                                     </li>
                                 </ul>
                               </p>

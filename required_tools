@@ -7,6 +7,6 @@ This following tools are required to run this application on the server which ex
 4. Install p7zip via the command : sudo apt-get install p7zip-full p7zip-rar
 6. Install paramiko via the command : pip install paramiko
 7. Add the following command in the crontab file: * /1 * * * python cron.py
-8. Install MongoDB
+8. Install MongoDB util: mongodump thru command line
 
 
