@@ -43,7 +43,7 @@ class JobConfig(Model):
     code
     """
     hostname = models.IPAddressField(_("Hostname"), max_length=16)
-    db_type = models.CharField(_("Database type"), max_length=100, choices=DB_TYPES,)
+    db_type = models.CharField(_("Database type"), max_length=100, choices=DB_TYPES)
     db_name = models.CharField(_("Database name"), max_length=100, null=True, blank=True)
     db_username = models.CharField(_("Database username"), max_length=100, null=True, blank=True)
     db_password = models.CharField(_("Database password"), max_length=100, null=True, blank=True)

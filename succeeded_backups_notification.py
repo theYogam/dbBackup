@@ -32,16 +32,12 @@ def notify_staff():
     recipient_list = [get_service_instance().member.email]
     staff_list = [staff.email for staff in Member.objects.filter(is_staff=True)]
     backup_list = [backup for backup in Backup.objects.order_by('-id').filter(status=SUCCESS)]
-    database_list = [backup.job_config.db_name for backup in backup_list]
-    hostname_list = [backup.job_config.hostname for backup in backup_list]
+    job_config_list = [backup.job_config for backup in backup_list]
     total_size = sum([backup.file_size for backup in backup_list])
-    type_list = [backup.job_config.db_type for backup in backup_list]
     s, unit = find_file_size(total_size)  # s is a constant that equals to 2 power the
 
-    extra_context = {'database_list': list(set(database_list)),
-                     'hostname_list': list(set(hostname_list)),
-                     'type_list': list(set(type_list)),
-                     'total_size': str(total_size % s) + unit,
+    extra_context = {'job_config_list': list(set(job_config_list)),
+                     'total_size': str(total_size / s) + unit,
                      'location': 'IKWEN_DB_BACKUPS',
                      'period': "From  %s  to  %s" %
                                (start.strftime('%Y/%m/%d %H:%M'), now.strftime('%Y/%m/%d %H:%M'))}

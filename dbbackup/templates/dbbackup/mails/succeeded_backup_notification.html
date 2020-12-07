@@ -194,9 +194,9 @@
                               <p style="-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;color:#555; overflow-wrap: break-word; text-align: justify;" >
                                 <h3>{{ period }}</h3>
                                 <ul>
-                                    <li><h4>Databases:</h4> {% for db in database_list %}{{ db }}, {% endfor %}</li>
-                                    <li><h4>Type:</h4> {% for db in database_list %}{{ db.db_type }}, {% endfor %}</li>
-                                    <li><h4>Hostname origins:</h4> {% for hostname in hostname_list %}{{ hostname }}, {% endfor %}</li>
+                                    <li><h4>Databases:</h4> {% for job_config in job_config_list %}{% if job_config.db_name %}{{ job_config.db_name }}{% else %}ALL{% endif %}, {% endfor %}</li>
+                                    <li><h4>Type:</h4> {% for job_config in job_config_list %}{{ job_config.db_type }}, {% endfor %}</li>
+                                    <li><h4>Hostname origins:</h4> {% for job_config in job_config_list %}{{ job_config.hostname }}, {% endfor %}</li>
                                     <li><h4>Total size:</h4> {{ total_size }}</li>
                                     <li><h4>Location:</h4> {{ location }}</li>
                                 </ul>
