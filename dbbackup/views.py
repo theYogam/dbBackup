@@ -1,5 +1,15 @@
 import os
+import urllib
+import json
+import mysql.connector
+import subprocess
+import paramiko
+
+import sys
 from ftplib import FTP
+from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure, PyMongoError, ConfigurationError
+
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'conf.settings')
 from django.http import HttpResponse, HttpResponseRedirect
@@ -13,25 +23,14 @@ from django.views.generic import TemplateView
 from django.utils.translation import gettext as _
 from djangotoolbox.fields import ListField
 
-from dbbackup.admin import JobConfigAdmin, BackupAdmin, DestinationServerAdmin
 from ikwen.core.utils import to_dict
 from ikwen.core.views import HybridListView, ChangeObjectBase
 
-
-from pymongo import MongoClient
-import urllib
-from pymongo.errors import ConnectionFailure, PyMongoError, ConfigurationError
-
-
 from dbbackup.models import JobConfig, DestinationServer, Backup
-from forms import JobConfigForm, DestinationServerForm
-# BackupForm,
+from dbbackup.admin import JobConfigAdmin, BackupAdmin, DestinationServerAdmin
+from dbbackup.forms import JobConfigForm, DestinationServerForm
 
-import json
-import subprocess
-import paramiko
 
-import sys
 
 
 reload(sys)
@@ -215,8 +214,19 @@ def test_db_connection(request, *args, **kwargs):
 
         except PyMongoError as e:
             return HttpResponse(json.dumps({'success': False}), 'content-type: text/json')
-    # elif db_type == 'MySQL':
-    #     pass
+    elif db_type == 'MySQL':
+        config = {}
+        if db_username:
+            config['user'] = db_username
+        if db_password:
+            config['password'] = db_password
+        try:
+            cnx = mysql.connector.connect(**config)
+            cnx.close()
+            return HttpResponse(json.dumps({'success': True}), 'content-type: text/json')
+        except:
+            return HttpResponse(json.dumps({'success': False}), 'content-type: text/json')
+
     else:
         return HttpResponse('Errors...')
 

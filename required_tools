@@ -1,12 +1,14 @@
 This following tools are required to run this application on the server which executes it.
 
 1. Install pip via the command: sudo apt-get install pip
-2. Istall virtualenv via the command: pip install virtualenv
+2. Install virtualenv via the command: pip install virtualenv
 2. Create a virtualenv via: virtualenv name_of_your_virtualenv
 3. Install Openssh-client and openssh-server via the command: sudo apt-get install openssh-client && sudo apt-get install openssh-server
 4. Install p7zip via the command : sudo apt-get install p7zip-full p7zip-rar
 6. Install paramiko via the command : pip install paramiko
 7. Add the following command in the crontab file: * /1 * * * python cron.py
-8. Install MongoDB util: mongodump thru command line
+8. Install MongoDB util on cron's server: mongodump thru command line
+9. Install MySQL util on application server: pip install mysql-connector-python
+10. Install MySQL Client on cron's server: sudo apt-get install mysql-client
 
 

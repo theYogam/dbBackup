@@ -304,10 +304,10 @@
                let endpoint;
                 endpoint = "{% url 'dbbackup:test_db_connection' %}";
                 param = {
-                'hostname': $hostname.val(),
-                'db_username': $db_username.val(),
-                'db_password': $db_password.val(),
-                'db_type': $db_type.val(),
+                    'hostname': $hostname.val(),
+                    'db_username': $db_username.val(),
+                    'db_password': $db_password.val(),
+                    'db_type': $db_type.val(),
                 };
                 /* When you add a new destination server, you need to check the connectivity to it.*/
                 if(destServerIndex > 0){
@@ -322,7 +322,7 @@
                 );
 
                 /* Checking input data before respond */
-                if ($db_type.val()!=='' && $db_type.val()!== 'MongoDB'){
+                if ($db_type.val()!=='' && ($db_type.val()!== 'MongoDB' && $db_type.val()!== 'MySQL')){
                     $error_fields = $('.job-config-form').find('.has-feedback').toArray();
                     $.each($error_fields, function (i, el) {
                         removeErrorMessage($(el));
