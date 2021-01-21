@@ -1,4 +1,12 @@
 {% load i18n humanize staticfiles admin_list %}
+<style>
+    .event-detail {height: 140px;}
+    @media (max-width: 767px) {
+        .event-detail {height: 160px!important;}
+        .event-icon {display: none}
+        .event-content {margin-left: 0; float: none; border: none}
+    }
+</style>
 {% include 'core/snippets/spinner.html' %}
 <div class="col-md-9 col-md-offset-1">
     <ul class="object-list list-group">

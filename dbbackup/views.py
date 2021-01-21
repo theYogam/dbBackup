@@ -152,13 +152,29 @@ class ChangeJobConfig(ChangeObjectBase):
         return context
 
 
+class DBListFilter(object):
+    title = _('Database')
+    parameter_name = 'database'
+
+    def lookups(self):
+        choices = [(job_config.id, job_config.db_type) for job_config in JobConfig.objects.all()]
+        return choices
+
+    def queryset(self, request, queryset):
+        value = request.GET.get(self.parameter_name)
+        if value:
+            job_config_list = JobConfig.objects.filter(db_type=value)
+            return queryset.filter(job_config__in=job_config_list)
+        return queryset
+
+
 class BackupList(HybridListView):
     """
     comment
     """
     model = Backup
     ordering = ('-id',)
-    list_filter = ('status', 'created_on')
+    list_filter = (DBListFilter, 'status', 'created_on')
     html_results_template_name = 'dbbackup/backup_list_result.html'
 
     def get_context_data(self, **kwargs):
@@ -224,6 +240,7 @@ def test_db_connection(request, *args, **kwargs):
             cnx = mysql.connector.connect(**config)
             cnx.close()
             return HttpResponse(json.dumps({'success': True}), 'content-type: text/json')
+
         except:
             return HttpResponse(json.dumps({'success': False}), 'content-type: text/json')
 

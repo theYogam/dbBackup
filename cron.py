@@ -109,7 +109,8 @@ def send_file_thru_sftp(db_hostname, backup, destination_server_list, source_fil
     error_message = []  # type: # List[Dict[str, Union[str, Any]]]
     return_code = 0
     remote_file_size = 0
-    remote_dir = 'IKWEN_DB_BACKUPS/' + db_hostname + backup.created_on.strftime('_%Y-%m-%d_%H-%M-%S') + '/'
+    db_type = backup.job_config.db_type
+    remote_dir = 'IKWEN_DB_BACKUPS/' + db_type + '_'+ db_hostname + backup.created_on.strftime('_%Y-%m-%d_%H-%M-%S') + '/'
     i = 0
 
     for destination_server in destination_server_list:
@@ -176,11 +177,11 @@ def send_file_thru_sftp(db_hostname, backup, destination_server_list, source_fil
                 ftp.cwd('IKWEN_DB_BACKUPS/')
                 print "Change directory to IKWEN_DB_BACKUPS"
                 try:
-                    ftp.mkd(db_hostname + backup.created_on.strftime('_%Y-%m-%d_%H-%M-%S') + '/')
-                    print "Create directory %s" % db_hostname + backup.created_on.strftime('_%Y-%m-%d_%H-%M-%S') + '/'
+                    ftp.mkd(db_type + '_' + db_hostname + backup.created_on.strftime('_%Y-%m-%d_%H-%M-%S') + '/')
+                    print "Create directory %s" % db_type + '_' + db_hostname + backup.created_on.strftime('_%Y-%m-%d_%H-%M-%S') + '/'
                 except:
                     pass
-                ftp.cwd(db_hostname + backup.created_on.strftime('_%Y-%m-%d_%H-%M-%S') + '/')
+                ftp.cwd(db_type + '_' + db_hostname + backup.created_on.strftime('_%Y-%m-%d_%H-%M-%S') + '/')
 
                 source_file = open(source_file_path, 'rb')
                 ftp.storbinary('STOR ' + source_file_path.split('/')[-1], source_file)
@@ -236,9 +237,9 @@ def do_backup(job_config):
 
     backup = Backup.objects.create(job_config=job_config, status=RUNNING)
     t0 = datetime.now()
-    dump_output_path = "IKWEN_DUMP/" + job_config.db_name.lower() + 'all'
+    dump_output_path = "IKWEN_DUMP/" + job_config.db_type.lower() + '_' + 'all'
     if job_config.db_name:
-        dump_output_path = "IKWEN_DUMP/" + job_config.db_name.lower() + job_config.db_name
+        dump_output_path = "IKWEN_DUMP/" + job_config.db_type.lower() + '_' + job_config.db_name
     dump_return_code, dump_output_path, dump_log_file_path = dump_database(job_config.hostname, job_config.db_name,
                                                                            job_config.db_type, job_config.db_username,
                                                                            job_config.db_password, dump_output_path)
@@ -291,16 +292,17 @@ def do_backup(job_config):
         return 0
 
     backup.relative_file_path = file_path
+    print backup.relative_file_path
     file_size = size
 
-    print "%d\n" % file_size
+    print "\n Backup size: %d\n" % file_size
 
     s, unit = find_file_size(file_size)
 
     backup.file_size_hr = str(file_size / s) + unit
     backup.file_size = file_size
 
-    print "%s\n" % backup.file_size
+    print "\n Backup size in HRF: %d\n" % backup.file_size
 
     backup.status = SUCCESS
     tf = datetime.now()
@@ -350,7 +352,7 @@ def delete(backup, destination_server_list):
             try:  # Try connection with FTP protocol
                 print "Connect to host %s thru FTP \n" % host_ip
                 ftp = FTP(host_ip, username, password, (host_ip, port))
-                print "Change working directory to host %s... \n" % host_ip
+                print "Change working directory to IKWEN_DB_BACKUPS\n"
                 ftp.cwd('IKWEN_DB_BACKUPS/')
                 print "Deleting directory %s\n" % backup.relative_file_path.split('/')[1]
                 ftp.delete(backup.relative_file_path.split('/')[1] + '/' + backup.relative_file_path.split('/')[-1])
@@ -379,11 +381,9 @@ if __name__ == '__main__':
     for job_config in JobConfig.objects.order_by('-id').all():
         if now.hour % job_config.run_every == 0:
             do_backup(job_config)
-            # Then keep 4 last backups of the same Job on the Server
+                # Then keep 4 last backups of the same Job on the Server
             backup_list = [backup for backup in Backup.objects.filter(job_config=job_config)]
             for backup in backup_list[:-4]:
                 delete(backup, job_config.destination_server_list)
-
-
 
 

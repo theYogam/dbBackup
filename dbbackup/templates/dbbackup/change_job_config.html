@@ -219,7 +219,7 @@
                                         <div class="event" style="">
                                             <div class="subtle-shade event-detail" style="height: 140px; padding: 0;">
                                                 <div class="event-icon pull-left" style="height: inherit; margin: 0;">
-                                                    <img src="{% static 'dbbackup/img/isometric-cloud-computing-concept-represented-by-a-server-with-a-vector-id969567772.jpg' %}" />
+                                                    <img src="{% static 'dbbackup/img/backup-data-bg2.jpg' %}" />
                                                 </div>
                                                 <div class="event-content" style="height: inherit;">
                                                     <div style="margin-bottom: 5px">
@@ -279,7 +279,7 @@
 
             /* Whenever a user focus (meaning, he has the intend to change an input) on an input of an old job config, we need to recheck connectivity */
 
-
+            $('#id_db_password').attr('type', 'password');
             if ($('body').find('.destination-server').hasClass('destination-server-already-exists')){
                 $('.job-config-form').addClass('previous-job-config-form');
             }

@@ -65,4 +65,11 @@
     text-align: center;
 }
 
+.event-detail {height: 140px;}
+@media (max-width: 767px) {
+    .event-detail {height: 160px!important;}
+    .event-icon {display: none}
+    .event-content {margin-left: 0; float: none; border: none}
+}
+
     /* End */

@@ -6,6 +6,12 @@
     .list-group:hover .list-group-item:hover {
         background: #fff;
     }
+    .event-detail {height: 140px;}
+    @media (max-width: 767px) {
+        .event-detail {height: 160px!important;}
+        .event-icon {display: none}
+        .event-content {margin-left: 0; float: none; border: none}
+    }
 </style>
 {% include 'core/snippets/spinner.html' %}
 <div class="col-md-9 col-md-offset-1">
@@ -15,7 +21,7 @@
                 {% for obj in objects_page.object_list %}
                     <li class="ik-li list-group-item {{ obj.status }}" id="{{ obj.id }}" data-id="{{ obj.id }}" style="border: none;">
                         <div class="event">
-                            <div class="subtle-shade event-detail" style="height: 140px;">
+                            <div class="subtle-shade event-detail">
                                 <div class="event-icon pull-left" style="height: inherit;">
                                     <img src="{% static 'dbbackup/img/backup-data-bg2.jpg' %}" />
                                 </div>

@@ -58,7 +58,7 @@ class Backup(Model):
     """
     code
     """
-    job_config = models.ForeignKey(JobConfig, on_delete=models.SET_NULL)
+    job_config = models.ForeignKey(JobConfig, on_delete=models.SET_NULL, null=True)
     status = models.CharField(_("Status"), max_length=12)
     run_time = models.IntegerField(_("Run time"), blank=True, null=True, default=0, help_text=_("Running time of the backup in seconds"))
     relative_file_path = models.CharField(_("Backup relative file path"), max_length=100)
