@@ -157,14 +157,16 @@ class DBListFilter(object):
     parameter_name = 'database'
 
     def lookups(self):
-        choices = [(job_config.id, job_config.db_type) for job_config in JobConfig.objects.all()]
+        # choices = list(set([(job_config.db_type, job_config.db_type) for job_config in JobConfig.objects.all()]))
+        db_type_list = ['MySQL', 'MongoDB', 'PostgreSQL', 'FireBase']
+        choices = [(db_type, db_type) for db_type in db_type_list]
         return choices
 
     def queryset(self, request, queryset):
         value = request.GET.get(self.parameter_name)
         if value:
             job_config_list = JobConfig.objects.filter(db_type=value)
-            return queryset.filter(job_config__in=job_config_list)
+            return queryset.filter(job_config__in=[job for job in job_config_list])
         return queryset
 
 
