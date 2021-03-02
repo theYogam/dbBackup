@@ -29,11 +29,11 @@ from django.utils.translation import ugettext as _, activate
 
 from importlib import import_module
 
-from ikwen.core.log import CRONS_LOGGING
+# from ikwen.core.log import CRONS_LOGGING
 
 from dbbackup.models import JobConfig, DestinationServer, Backup
 
-logging.config.dictConfig(CRONS_LOGGING)
+# logging.config.dictConfig(CRONS_LOGGING)
 logger = logging.getLogger('ikwen.crons')
 
 STARTED = 'Started'
@@ -377,13 +377,16 @@ def delete(backup, destination_server_list):
 
 
 if __name__ == '__main__':
-    now = datetime.now()
-    for job_config in JobConfig.objects.order_by('-id').all():
-        if now.hour % job_config.run_every == 0:
-            do_backup(job_config)
-                # Then keep 4 last backups of the same Job on the Server
-            backup_list = [backup for backup in Backup.objects.filter(job_config=job_config)]
-            for backup in backup_list[:-4]:
-                delete(backup, job_config.destination_server_list)
+    try:
+        now = datetime.now()
+        for job_config in JobConfig.objects.order_by('-id').all():
+            if now.hour % job_config.run_every == 0:
+                do_backup(job_config)
+                    # Then keep 4 last backups of the same Job on the Server
+                backup_list = [backup for backup in Backup.objects.filter(job_config=job_config)]
+                for backup in backup_list[:-4]:
+                    delete(backup, job_config.destination_server_list)
+    except:
+        logger.error("Failed to run backups", exc_info=True)
 
 

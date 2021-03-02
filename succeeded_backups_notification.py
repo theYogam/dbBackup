@@ -19,8 +19,8 @@ from ikwen.core.utils import get_service_instance, send_push, get_mail_content
 from dbbackup.models import JobConfig, Backup
 from cron import FAILED, SUCCESS, find_file_size
 
-from ikwen.core.log import CRONS_LOGGING
-logging.config.dictConfig(CRONS_LOGGING)
+# from ikwen.core.log import CRONS_LOGGING
+# logging.config.dictConfig(CRONS_LOGGING)
 logger = logging.getLogger('ikwen.crons')
 
 
